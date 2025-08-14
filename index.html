@@ -885,145 +885,169 @@
             // Provider Form
             document.getElementById('add-provider-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('providers');
-                if(!collRef) return;
-                const id = document.getElementById('provider-id').value;
-                const data = {
-                    name: document.getElementById('provider-name').value,
-                    contact: document.getElementById('provider-contact').value,
-                    notes: document.getElementById('provider-notes').value,
-                };
-                if (id) {
-                    await setDoc(doc(collRef, id), data);
-                } else {
-                    await addDoc(collRef, data);
+                try {
+                    const collRef = getCollectionRef('providers');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('provider-id').value;
+                    const data = {
+                        name: document.getElementById('provider-name').value,
+                        contact: document.getElementById('provider-contact').value,
+                        notes: document.getElementById('provider-notes').value,
+                    };
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-provider-modal');
+                } catch(error) {
+                    console.error("Error saving provider:", error);
                 }
-                closeModal('add-provider-modal');
             });
 
             // Ingredient Form
             document.getElementById('add-ingredient-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('ingredients');
-                if(!collRef) return;
-                const id = document.getElementById('ingredient-id').value;
-                const data = {
-                    name: document.getElementById('ingredient-name').value,
-                    providerId: document.getElementById('ingredient-provider').value,
-                    unit: document.getElementById('ingredient-unit').value,
-                    stock: parseFloat(document.getElementById('ingredient-stock').value),
-                    purchaseSize: parseFloat(document.getElementById('ingredient-purchase-size').value),
-                    purchaseCost: parseFloat(document.getElementById('ingredient-purchase-cost').value),
-                    yield: parseFloat(document.getElementById('ingredient-yield').value),
-                };
-                if (id) {
-                    await setDoc(doc(collRef, id), data);
-                } else {
-                    await addDoc(collRef, data);
+                try {
+                    const collRef = getCollectionRef('ingredients');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('ingredient-id').value;
+                    const data = {
+                        name: document.getElementById('ingredient-name').value,
+                        providerId: document.getElementById('ingredient-provider').value,
+                        unit: document.getElementById('ingredient-unit').value,
+                        stock: parseFloat(document.getElementById('ingredient-stock').value),
+                        purchaseSize: parseFloat(document.getElementById('ingredient-purchase-size').value),
+                        purchaseCost: parseFloat(document.getElementById('ingredient-purchase-cost').value),
+                        yield: parseFloat(document.getElementById('ingredient-yield').value),
+                    };
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-ingredient-modal');
+                } catch(error) {
+                    console.error("Error saving ingredient:", error);
                 }
-                closeModal('add-ingredient-modal');
             });
 
             // Supply Form
             document.getElementById('add-supply-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('supplies');
-                if(!collRef) return;
-                const id = document.getElementById('supply-id').value;
-                const data = {
-                    name: document.getElementById('supply-name').value,
-                    stock: parseInt(document.getElementById('supply-stock').value, 10),
-                    packSize: parseInt(document.getElementById('supply-pack-size').value, 10),
-                    packCost: parseFloat(document.getElementById('supply-pack-cost').value)
-                };
-                if (id) {
-                    await setDoc(doc(collRef, id), data);
-                } else {
-                    await addDoc(collRef, data);
+                try {
+                    const collRef = getCollectionRef('supplies');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('supply-id').value;
+                    const data = {
+                        name: document.getElementById('supply-name').value,
+                        stock: parseInt(document.getElementById('supply-stock').value, 10),
+                        packSize: parseInt(document.getElementById('supply-pack-size').value, 10),
+                        packCost: parseFloat(document.getElementById('supply-pack-cost').value)
+                    };
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-supply-modal');
+                } catch(error) {
+                    console.error("Error saving supply:", error);
                 }
-                closeModal('add-supply-modal');
             });
             
             // Customer Form
             document.getElementById('add-customer-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('customers');
-                if(!collRef) return;
-                const id = document.getElementById('customer-id').value;
-                const data = {
-                    name: document.getElementById('customer-name').value,
-                    contact: document.getElementById('customer-contact').value,
-                    notes: document.getElementById('customer-notes').value,
-                };
-                if (id) {
-                    await setDoc(doc(collRef, id), data);
-                } else {
-                    await addDoc(collRef, data);
+                try {
+                    const collRef = getCollectionRef('customers');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('customer-id').value;
+                    const data = {
+                        name: document.getElementById('customer-name').value,
+                        contact: document.getElementById('customer-contact').value,
+                        notes: document.getElementById('customer-notes').value,
+                    };
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-customer-modal');
+                } catch(error) {
+                    console.error("Error saving customer:", error);
                 }
-                closeModal('add-customer-modal');
             });
 
             // Recipe Form
             document.getElementById('add-recipe-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('recipes');
-                if(!collRef) return;
-                const id = document.getElementById('recipe-id').value;
-                const items = [];
-                document.querySelectorAll('.recipe-item-row').forEach(row => {
-                    items.push({
-                        type: row.dataset.type,
-                        id: row.querySelector('select').value,
-                        quantity: parseFloat(row.querySelector('input[type="number"]').value)
+                try {
+                    const collRef = getCollectionRef('recipes');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('recipe-id').value;
+                    const items = [];
+                    document.querySelectorAll('.recipe-item-row').forEach(row => {
+                        items.push({
+                            type: row.dataset.type,
+                            id: row.querySelector('select').value,
+                            quantity: parseFloat(row.querySelector('input[type="number"]').value)
+                        });
                     });
-                });
-                const data = {
-                    name: document.getElementById('recipe-name').value,
-                    price: parseFloat(document.getElementById('recipe-price').value),
-                    items: items.filter(item => item.id && item.quantity > 0)
-                };
+                    const data = {
+                        name: document.getElementById('recipe-name').value,
+                        price: parseFloat(document.getElementById('recipe-price').value),
+                        items: items.filter(item => item.id && item.quantity > 0)
+                    };
 
-                if (id) {
-                    await setDoc(doc(collRef, id), data);
-                } else {
-                    await addDoc(collRef, data);
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-recipe-modal');
+                } catch(error) {
+                    console.error("Error saving recipe:", error);
                 }
-                closeModal('add-recipe-modal');
             });
 
             // Order Form
             document.getElementById('add-order-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const collRef = getCollectionRef('orders');
-                if(!collRef) return;
-                const id = document.getElementById('order-id').value;
-                const items = [];
-                document.querySelectorAll('.order-item-row').forEach(row => {
-                    items.push({
-                        recipeId: row.querySelector('select').value,
-                        quantity: parseInt(row.querySelector('input[type="number"]').value, 10)
+                try {
+                    const collRef = getCollectionRef('orders');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('order-id').value;
+                    const items = [];
+                    document.querySelectorAll('.order-item-row').forEach(row => {
+                        items.push({
+                            recipeId: row.querySelector('select').value,
+                            quantity: parseInt(row.querySelector('input[type="number"]').value, 10)
+                        });
                     });
-                });
-                const data = {
-                    customerId: document.getElementById('order-customer').value,
-                    status: document.getElementById('order-status').value,
-                    discount: parseFloat(document.getElementById('order-discount').value) || 0,
-                    items: items.filter(item => item.recipeId && item.quantity > 0),
-                    createdAt: new Date()
-                };
-                
-                const oldOrder = id ? ordersCache.find(o => o.id === id) : null;
-                
-                if (id) {
-                    delete data.createdAt; // Don't overwrite creation date on edit
-                    await setDoc(doc(collRef, id), data, { merge: true });
-                } else {
-                    await addDoc(collRef, data);
+                    const data = {
+                        customerId: document.getElementById('order-customer').value,
+                        status: document.getElementById('order-status').value,
+                        discount: parseFloat(document.getElementById('order-discount').value) || 0,
+                        items: items.filter(item => item.recipeId && item.quantity > 0),
+                        createdAt: new Date()
+                    };
+                    
+                    const oldOrder = id ? ordersCache.find(o => o.id === id) : null;
+                    
+                    if (id) {
+                        delete data.createdAt; // Don't overwrite creation date on edit
+                        await setDoc(doc(collRef, id), data, { merge: true });
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+
+                    await updateStockLevels(data, oldOrder);
+
+                    closeModal('add-order-modal');
+                } catch(error) {
+                    console.error("Error saving order:", error);
                 }
-
-                await updateStockLevels(data, oldOrder);
-
-                closeModal('add-order-modal');
             });
         }
         
@@ -1119,7 +1143,7 @@
         async function performDelete(type, id) {
             try {
                 const collRef = getCollectionRef(type + 's');
-                if(!collRef) return;
+                if(!collRef) throw new Error("User not authenticated.");
                 // If an order is deleted, we need to reverse stock changes if it was fulfilled
                 if (type === 'order') {
                     const order = ordersCache.find(o => o.id === id);
