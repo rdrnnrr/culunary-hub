@@ -105,6 +105,9 @@
                 <button onclick="showTab('dashboard')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </button>
+                <button onclick="showTab('providers')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-truck mr-2"></i>Providers
+                </button>
                 <button onclick="showTab('ingredients')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-carrot mr-2"></i>Ingredients
                 </button>
@@ -152,9 +155,19 @@
                 <div class="mt-8 bg-white p-6 rounded-lg shadow">
                     <h3 class="text-xl font-semibold mb-4">Recent Orders</h3>
                     <div id="dashboard-recent-orders" class="space-y-4">
-                        <!-- Recent orders will be populated here -->
                          <p class="text-gray-500">No recent orders to display.</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Providers Tab -->
+            <div id="providers-tab" class="tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold">Manage Providers</h2>
+                    <button onclick="openModal('add-provider-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Provider</button>
+                </div>
+                <div id="providers-list" class="bg-white p-4 rounded-lg shadow">
+                    <!-- Providers list will be populated here -->
                 </div>
             </div>
 
@@ -220,30 +233,25 @@
                     <p>Welcome, Dennis! Here’s a step-by-step guide to get you and Catalina started:</p>
                     <ol>
                         <li>
-                            <strong><i class="fas fa-carrot mr-2 text-indigo-500"></i>Add Ingredients:</strong> Go to the "Ingredients" tab. Click "Add Ingredient" and fill in the details.
-                            <ul>
-                                <li><strong>Unit:</strong> This is the unit for the recipe (e.g., gram, ml, piece).</li>
-                                <li><strong>Purchase Size & Cost:</strong> How you buy it in bulk (e.g., 1000 grams for $10).</li>
-                                <li><strong>Yield %:</strong> Crucial for items like meat with bones or vegetables that need peeling. If 1kg of chicken gives you 800g of usable meat, the yield is 80%. This ensures your costs are accurate.</li>
-                            </ul>
+                            <strong><i class="fas fa-truck mr-2 text-indigo-500"></i>Add Providers:</strong> Go to the "Providers" tab to enter your suppliers like Costco, Sam's Club, etc.
                         </li>
                         <li>
-                            <strong><i class="fas fa-box mr-2 text-indigo-500"></i>Add Supplies:</strong> Go to the "Supplies" tab. This is for non-food items like containers, forks, or napkins.
-                             <ul>
-                                <li><strong>Units per Pack:</strong> If you buy a pack of 100 forks, enter 100. The app will calculate the cost per single fork for your recipes.</li>
-                            </ul>
+                            <strong><i class="fas fa-carrot mr-2 text-indigo-500"></i>Add Ingredients:</strong> In the "Ingredients" tab, when you add an item, you can now select who you bought it from. This lets you add "Chicken Breast" from multiple providers to compare costs.
                         </li>
                         <li>
-                            <strong><i class="fas fa-book-open mr-2 text-indigo-500"></i>Create Recipes:</strong> In the "Recipes" tab, click "Create Recipe". Give it a name and a selling price. Then, add the ingredients and supplies you've already entered, specifying the quantity needed for a single portion of that recipe. The app automatically calculates the total cost and profit per portion.
+                            <strong><i class="fas fa-box mr-2 text-indigo-500"></i>Add Supplies:</strong> This is for non-food items like containers, forks, or napkins.
+                        </li>
+                        <li>
+                            <strong><i class="fas fa-book-open mr-2 text-indigo-500"></i>Create Recipes:</strong> In the "Recipes" tab, build your menu items by selecting from the ingredients and supplies you've entered.
                         </li>
                          <li>
-                            <strong><i class="fas fa-users mr-2 text-indigo-500"></i>Manage Customers:</strong> Keep track of your clients in the "Customers" tab. This helps in associating orders and tracking purchase history.
+                            <strong><i class="fas fa-users mr-2 text-indigo-500"></i>Manage Customers:</strong> Keep track of your clients in the "Customers" tab.
                         </li>
                         <li>
-                            <strong><i class="fas fa-receipt mr-2 text-indigo-500"></i>Log Orders:</strong> Head to the "Orders" tab to create a new order. You can select a customer, add multiple recipes, set quantities, and even apply a discount. The status (Pending, In Progress, Fulfilled) helps you track your workflow.
+                            <strong><i class="fas fa-receipt mr-2 text-indigo-500"></i>Log Orders:</strong> Head to the "Orders" tab to create, track, and fulfill customer orders.
                         </li>
                          <li>
-                            <strong><i class="fas fa-chart-line mr-2 text-indigo-500"></i>Check the Dashboard:</strong> This is your command center! It gives you a real-time overview of your revenue, costs, and profits based on your "Fulfilled" orders.
+                            <strong><i class="fas fa-chart-line mr-2 text-indigo-500"></i>Check the Dashboard:</strong> Get a real-time overview of your revenue, costs, and profits.
                         </li>
                     </ol>
                     <p class="mt-6 font-semibold text-indigo-600">This tool saves all your data in real-time, so you and Catalina can collaborate from anywhere. Good luck with the business!</p>
@@ -253,6 +261,32 @@
     </div>
 
     <!-- Modals -->
+     <!-- Add Provider Modal -->
+    <div id="add-provider-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Add New Provider</h3>
+            <form id="add-provider-form" class="space-y-4">
+                <input type="hidden" id="provider-id">
+                <div>
+                    <label for="provider-name" class="block text-sm font-medium text-gray-700">Provider Name</label>
+                    <input type="text" id="provider-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="provider-contact" class="block text-sm font-medium text-gray-700">Contact Info (Phone/Email/Rep)</label>
+                    <input type="text" id="provider-contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="provider-notes" class="block text-sm font-medium text-gray-700">Notes</label>
+                    <textarea id="provider-notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" onclick="closeModal('add-provider-modal')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">Cancel</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Save Provider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Add Ingredient Modal -->
     <div id="add-ingredient-modal" class="modal-backdrop">
         <div class="modal-content">
@@ -262,6 +296,12 @@
                 <div>
                     <label for="ingredient-name" class="block text-sm font-medium text-gray-700">Ingredient Name</label>
                     <input type="text" id="ingredient-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="ingredient-provider" class="block text-sm font-medium text-gray-700">Provider</label>
+                    <select id="ingredient-provider" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <!-- Provider options populated here -->
+                    </select>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -458,12 +498,12 @@
 
         // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
         const firebaseConfig = {
-            apiKey: "PASTE_YOUR_API_KEY_HERE",
-            authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
-            projectId: "PASTE_YOUR_PROJECT_ID_HERE",
-            storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
-            messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
-            appId: "PASTE_YOUR_APP_ID_HERE"
+            apiKey: "AIzaSyCFoDduJ9pRL2lAGvYek3AyhVb066SdpGw",
+            authDomain: "catalina-culinary-hub.firebaseapp.com",
+            projectId: "catalina-culinary-hub",
+            storageBucket: "catalina-culinary-hub.firebasestorage.app",
+            messagingSenderId: "32561043797",
+            appId: "1:32561043797:web:a9c4454e346845d78677dc"
         };
         // --- END OF FIREBASE CONFIGURATION ---
 
@@ -473,6 +513,7 @@
         const db = getFirestore(app);
 
         let userId = null;
+        let providersCache = [];
         let ingredientsCache = [];
         let suppliesCache = [];
         let recipesCache = [];
@@ -586,7 +627,7 @@
             listeners.forEach(unsubscribe => unsubscribe());
             listeners = [];
 
-            const collections = ['ingredients', 'supplies', 'recipes', 'customers', 'orders'];
+            const collections = ['providers', 'ingredients', 'supplies', 'recipes', 'customers', 'orders'];
             collections.forEach(name => {
                 const collRef = getCollectionRef(name);
                 if (!collRef) return; // Don't attach listener if user isn't logged in
@@ -600,6 +641,7 @@
                     if(window[renderFuncName]) window[renderFuncName]();
 
                     // Special cases
+                    if(name === 'providers') populateProviderDropdowns();
                     if(name === 'customers') populateCustomerDropdowns();
                     if(name === 'orders') updateDashboard();
 
@@ -610,6 +652,24 @@
         
         // --- UI Rendering Functions ---
         
+        window.renderProviders = function() {
+            const list = document.getElementById('providers-list');
+             if (providersCache.length === 0) {
+                list.innerHTML = `<p class="text-gray-500">No providers added yet. Click "Add Provider" to start.</p>`;
+                return;
+            }
+            list.innerHTML = providersCache.map(prov => `
+                <div class="p-4 border-b grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <div class="font-semibold">${prov.name}</div>
+                    <div class="text-sm text-gray-600">${prov.contact || 'No contact info'}</div>
+                    <div class="flex justify-end gap-2">
+                        <button onclick="editProvider('${prov.id}')" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-pencil-alt"></i></button>
+                        <button onclick="confirmDelete('provider', '${prov.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         window.renderIngredients = function() {
             const list = document.getElementById('ingredients-list');
             if (ingredientsCache.length === 0) {
@@ -617,10 +677,12 @@
                 return;
             }
             list.innerHTML = ingredientsCache.map(ing => {
+                const provider = providersCache.find(p => p.id === ing.providerId);
                 const costPerUnit = (ing.purchaseCost / ing.purchaseSize) / (ing.yield / 100);
                 return `
-                <div class="p-4 border-b grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                <div class="p-4 border-b grid grid-cols-2 md:grid-cols-6 gap-4 items-center">
                     <div class="font-semibold col-span-2 md:col-span-1">${ing.name}</div>
+                    <div class="text-sm text-gray-600">${provider?.name || 'N/A'}</div>
                     <div class="text-sm text-gray-600">Stock: ${ing.stock} ${ing.unit}</div>
                     <div class="text-sm text-gray-600">Cost/Unit: $${costPerUnit.toFixed(4)}</div>
                     <div class="text-sm text-gray-600">Yield: ${ing.yield}%</div>
@@ -800,6 +862,25 @@
 
         // --- Form Submissions ---
         function setupFormSubmissions() {
+            // Provider Form
+            document.getElementById('add-provider-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const collRef = getCollectionRef('providers');
+                if(!collRef) return;
+                const id = document.getElementById('provider-id').value;
+                const data = {
+                    name: document.getElementById('provider-name').value,
+                    contact: document.getElementById('provider-contact').value,
+                    notes: document.getElementById('provider-notes').value,
+                };
+                if (id) {
+                    await setDoc(doc(collRef, id), data);
+                } else {
+                    await addDoc(collRef, data);
+                }
+                closeModal('add-provider-modal');
+            });
+
             // Ingredient Form
             document.getElementById('add-ingredient-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -808,6 +889,7 @@
                 const id = document.getElementById('ingredient-id').value;
                 const data = {
                     name: document.getElementById('ingredient-name').value,
+                    providerId: document.getElementById('ingredient-provider').value,
                     unit: document.getElementById('ingredient-unit').value,
                     stock: parseFloat(document.getElementById('ingredient-stock').value),
                     purchaseSize: parseFloat(document.getElementById('ingredient-purchase-size').value),
@@ -927,11 +1009,22 @@
         
         // --- Edit and Delete Functions ---
         
+        window.editProvider = (id) => {
+            const prov = providersCache.find(p => p.id === id);
+            if (!prov) return;
+            document.getElementById('provider-id').value = id;
+            document.getElementById('provider-name').value = prov.name;
+            document.getElementById('provider-contact').value = prov.contact;
+            document.getElementById('provider-notes').value = prov.notes;
+            openModal('add-provider-modal');
+        };
+
         window.editIngredient = (id) => {
             const ing = ingredientsCache.find(i => i.id === id);
             if (!ing) return;
             document.getElementById('ingredient-id').value = id;
             document.getElementById('ingredient-name').value = ing.name;
+            document.getElementById('ingredient-provider').value = ing.providerId;
             document.getElementById('ingredient-unit').value = ing.unit;
             document.getElementById('ingredient-stock').value = ing.stock;
             document.getElementById('ingredient-purchase-size').value = ing.purchaseSize;
@@ -1130,7 +1223,7 @@
             div.dataset.type = type;
             
             const cache = type === 'ingredient' ? ingredientsCache : suppliesCache;
-            const options = cache.map(item => `<option value="${item.id}" ${item.id === selectedId ? 'selected' : ''}>${item.name}</option>`).join('');
+            const options = cache.map(item => `<option value="${item.id}" ${item.id === selectedId ? 'selected' : ''}>${item.name} ${item.providerId ? `(${providersCache.find(p=>p.id === item.providerId)?.name || ''})` : ''}</option>`).join('');
 
             div.innerHTML = `
                 <select class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
@@ -1162,9 +1255,14 @@
             container.appendChild(div);
         }
 
+        window.populateProviderDropdowns = function() {
+            const select = document.getElementById('ingredient-provider');
+            select.innerHTML = `<option value="">Select a provider...</option>` + providersCache.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
         window.populateCustomerDropdowns = function() {
             const select = document.getElementById('order-customer');
-            select.innerHTML = customersCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            select.innerHTML = `<option value="">Select a customer...</option>` + customersCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         }
 
         // --- UI Control (Tabs, Modals) ---
