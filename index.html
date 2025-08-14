@@ -478,8 +478,7 @@
         let recipesCache = [];
         let customersCache = [];
         let ordersCache = [];
-        const appId = 'culinary-hub-data'; // A unique identifier for this app's data
-
+        
         // --- DOM Elements ---
         const authContainer = document.getElementById('auth-container');
         const appContainer = document.getElementById('app-container');
@@ -503,6 +502,9 @@
                 authContainer.style.display = 'flex';
                 appContainer.style.display = 'none';
                 userId = null;
+                // Detach listeners when logged out
+                listeners.forEach(unsubscribe => unsubscribe());
+                listeners = [];
             }
         });
 
@@ -563,7 +565,9 @@
 
 
         function getCollectionRef(collectionName) {
-            return collection(db, 'artifacts', appId, 'public', 'data', collectionName);
+            // IMPORTANT: This now points to a user-specific data path
+            if (!userId) return null;
+            return collection(db, 'users', userId, collectionName);
         }
 
         // --- App Initialization ---
@@ -577,13 +581,16 @@
         // --- Real-time Data Listeners ---
         let listeners = [];
         function setupListeners() {
-            // Detach old listeners if they exist
+            // Detach old listeners if they exist to prevent memory leaks on re-login
             listeners.forEach(unsubscribe => unsubscribe());
             listeners = [];
 
             const collections = ['ingredients', 'supplies', 'recipes', 'customers', 'orders'];
             collections.forEach(name => {
-                const unsubscribe = onSnapshot(getCollectionRef(name), (snapshot) => {
+                const collRef = getCollectionRef(name);
+                if (!collRef) return; // Don't attach listener if user isn't logged in
+
+                const unsubscribe = onSnapshot(collRef, (snapshot) => {
                     const cacheName = `${name}Cache`;
                     window[cacheName] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     
@@ -795,6 +802,8 @@
             // Ingredient Form
             document.getElementById('add-ingredient-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const collRef = getCollectionRef('ingredients');
+                if(!collRef) return;
                 const id = document.getElementById('ingredient-id').value;
                 const data = {
                     name: document.getElementById('ingredient-name').value,
@@ -805,9 +814,9 @@
                     yield: parseFloat(document.getElementById('ingredient-yield').value),
                 };
                 if (id) {
-                    await setDoc(doc(getCollectionRef('ingredients'), id), data);
+                    await setDoc(doc(collRef, id), data);
                 } else {
-                    await addDoc(getCollectionRef('ingredients'), data);
+                    await addDoc(collRef, data);
                 }
                 closeModal('add-ingredient-modal');
             });
@@ -815,6 +824,8 @@
             // Supply Form
             document.getElementById('add-supply-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const collRef = getCollectionRef('supplies');
+                if(!collRef) return;
                 const id = document.getElementById('supply-id').value;
                 const data = {
                     name: document.getElementById('supply-name').value,
@@ -823,9 +834,9 @@
                     packCost: parseFloat(document.getElementById('supply-pack-cost').value)
                 };
                 if (id) {
-                    await setDoc(doc(getCollectionRef('supplies'), id), data);
+                    await setDoc(doc(collRef, id), data);
                 } else {
-                    await addDoc(getCollectionRef('supplies'), data);
+                    await addDoc(collRef, data);
                 }
                 closeModal('add-supply-modal');
             });
@@ -833,6 +844,8 @@
             // Customer Form
             document.getElementById('add-customer-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const collRef = getCollectionRef('customers');
+                if(!collRef) return;
                 const id = document.getElementById('customer-id').value;
                 const data = {
                     name: document.getElementById('customer-name').value,
@@ -840,9 +853,9 @@
                     notes: document.getElementById('customer-notes').value,
                 };
                 if (id) {
-                    await setDoc(doc(getCollectionRef('customers'), id), data);
+                    await setDoc(doc(collRef, id), data);
                 } else {
-                    await addDoc(getCollectionRef('customers'), data);
+                    await addDoc(collRef, data);
                 }
                 closeModal('add-customer-modal');
             });
@@ -850,6 +863,8 @@
             // Recipe Form
             document.getElementById('add-recipe-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const collRef = getCollectionRef('recipes');
+                if(!collRef) return;
                 const id = document.getElementById('recipe-id').value;
                 const items = [];
                 document.querySelectorAll('.recipe-item-row').forEach(row => {
@@ -866,9 +881,9 @@
                 };
 
                 if (id) {
-                    await setDoc(doc(getCollectionRef('recipes'), id), data);
+                    await setDoc(doc(collRef, id), data);
                 } else {
-                    await addDoc(getCollectionRef('recipes'), data);
+                    await addDoc(collRef, data);
                 }
                 closeModal('add-recipe-modal');
             });
@@ -876,6 +891,8 @@
             // Order Form
             document.getElementById('add-order-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const collRef = getCollectionRef('orders');
+                if(!collRef) return;
                 const id = document.getElementById('order-id').value;
                 const items = [];
                 document.querySelectorAll('.order-item-row').forEach(row => {
@@ -896,9 +913,9 @@
                 
                 if (id) {
                     delete data.createdAt; // Don't overwrite creation date on edit
-                    await setDoc(doc(getCollectionRef('orders'), id), data, { merge: true });
+                    await setDoc(doc(collRef, id), data, { merge: true });
                 } else {
-                    await addDoc(getCollectionRef('orders'), data);
+                    await addDoc(collRef, data);
                 }
 
                 await updateStockLevels(data, oldOrder);
@@ -987,6 +1004,8 @@
         
         async function performDelete(type, id) {
             try {
+                const collRef = getCollectionRef(type + 's');
+                if(!collRef) return;
                 // If an order is deleted, we need to reverse stock changes if it was fulfilled
                 if (type === 'order') {
                     const order = ordersCache.find(o => o.id === id);
@@ -995,7 +1014,7 @@
                         await updateStockLevels(null, order);
                     }
                 }
-                await deleteDoc(doc(getCollectionRef(type + 's'), id));
+                await deleteDoc(doc(collRef, id));
             } catch (error) {
                 console.error(`Error deleting ${type}:`, error);
                 alert(`Could not delete ${type}. It might be in use in a recipe or order.`);
@@ -1081,8 +1100,11 @@
                         const itemCache = type === 'ingredient' ? ingredientsCache : suppliesCache;
                         const item = itemCache.find(i => i.id === id);
                         if (item) {
-                            const docRef = doc(getCollectionRef(type + 's'), id);
-                            batch.update(docRef, { stock: item.stock + change });
+                            const collRef = getCollectionRef(type + 's');
+                            if(collRef) {
+                                const docRef = doc(collRef, id);
+                                batch.update(docRef, { stock: item.stock + change });
+                            }
                         }
                     }
                 }
