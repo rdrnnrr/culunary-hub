@@ -105,6 +105,9 @@
                 <button onclick="showTab('dashboard')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </button>
+                 <button onclick="showTab('recipe-importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-magic mr-2"></i>Recipe Importer
+                </button>
                 <button onclick="showTab('providers')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-truck mr-2"></i>Providers
                 </button>
@@ -157,6 +160,23 @@
                     <div id="dashboard-recent-orders" class="space-y-4">
                          <p class="text-gray-500">No recent orders to display.</p>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Recipe Importer Tab -->
+            <div id="recipe-importer-tab" class="tab-content">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">AI Recipe Importer</h2>
+                    <p class="text-gray-600 mb-6">Paste a URL from a recipe website, and the AI will attempt to extract the ingredients and create a new recipe for you.</p>
+                    <div class="flex gap-2">
+                        <input type="url" id="recipe-url-input" placeholder="https://www.allrecipes.com/..." class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <button id="import-recipe-btn" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">
+                            <span id="import-btn-text">Import</span>
+                            <i id="import-spinner" class="fas fa-spinner fa-spin hidden"></i>
+                        </button>
+                    </div>
+                    <div id="importer-error" class="text-red-500 text-sm mt-2 hidden"></div>
+                    <div id="importer-result" class="mt-8"></div>
                 </div>
             </div>
 
