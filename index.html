@@ -319,7 +319,7 @@
                 </div>
                  <div>
                     <label for="ingredient-provider" class="block text-sm font-medium text-gray-700">Provider</label>
-                    <select id="ingredient-provider" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <select id="ingredient-provider" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <!-- Provider options populated here -->
                     </select>
                 </div>
@@ -902,6 +902,7 @@
                     closeModal('add-provider-modal');
                 } catch(error) {
                     console.error("Error saving provider:", error);
+                    alert("Could not save provider. Check console for details.");
                 }
             });
 
@@ -916,10 +917,10 @@
                         name: document.getElementById('ingredient-name').value,
                         providerId: document.getElementById('ingredient-provider').value,
                         unit: document.getElementById('ingredient-unit').value,
-                        stock: parseFloat(document.getElementById('ingredient-stock').value),
-                        purchaseSize: parseFloat(document.getElementById('ingredient-purchase-size').value),
-                        purchaseCost: parseFloat(document.getElementById('ingredient-purchase-cost').value),
-                        yield: parseFloat(document.getElementById('ingredient-yield').value),
+                        stock: parseFloat(document.getElementById('ingredient-stock').value) || 0,
+                        purchaseSize: parseFloat(document.getElementById('ingredient-purchase-size').value) || 0,
+                        purchaseCost: parseFloat(document.getElementById('ingredient-purchase-cost').value) || 0,
+                        yield: parseFloat(document.getElementById('ingredient-yield').value) || 100,
                     };
                     if (id) {
                         await setDoc(doc(collRef, id), data);
@@ -929,6 +930,7 @@
                     closeModal('add-ingredient-modal');
                 } catch(error) {
                     console.error("Error saving ingredient:", error);
+                    alert("Could not save ingredient. Check console for details.");
                 }
             });
 
@@ -941,9 +943,9 @@
                     const id = document.getElementById('supply-id').value;
                     const data = {
                         name: document.getElementById('supply-name').value,
-                        stock: parseInt(document.getElementById('supply-stock').value, 10),
-                        packSize: parseInt(document.getElementById('supply-pack-size').value, 10),
-                        packCost: parseFloat(document.getElementById('supply-pack-cost').value)
+                        stock: parseInt(document.getElementById('supply-stock').value, 10) || 0,
+                        packSize: parseInt(document.getElementById('supply-pack-size').value, 10) || 1,
+                        packCost: parseFloat(document.getElementById('supply-pack-cost').value) || 0
                     };
                     if (id) {
                         await setDoc(doc(collRef, id), data);
@@ -953,6 +955,7 @@
                     closeModal('add-supply-modal');
                 } catch(error) {
                     console.error("Error saving supply:", error);
+                    alert("Could not save supply. Check console for details.");
                 }
             });
             
@@ -976,6 +979,7 @@
                     closeModal('add-customer-modal');
                 } catch(error) {
                     console.error("Error saving customer:", error);
+                    alert("Could not save customer. Check console for details.");
                 }
             });
 
@@ -991,12 +995,12 @@
                         items.push({
                             type: row.dataset.type,
                             id: row.querySelector('select').value,
-                            quantity: parseFloat(row.querySelector('input[type="number"]').value)
+                            quantity: parseFloat(row.querySelector('input[type="number"]').value) || 0
                         });
                     });
                     const data = {
                         name: document.getElementById('recipe-name').value,
-                        price: parseFloat(document.getElementById('recipe-price').value),
+                        price: parseFloat(document.getElementById('recipe-price').value) || 0,
                         items: items.filter(item => item.id && item.quantity > 0)
                     };
 
@@ -1008,6 +1012,7 @@
                     closeModal('add-recipe-modal');
                 } catch(error) {
                     console.error("Error saving recipe:", error);
+                    alert("Could not save recipe. Check console for details.");
                 }
             });
 
@@ -1022,7 +1027,7 @@
                     document.querySelectorAll('.order-item-row').forEach(row => {
                         items.push({
                             recipeId: row.querySelector('select').value,
-                            quantity: parseInt(row.querySelector('input[type="number"]').value, 10)
+                            quantity: parseInt(row.querySelector('input[type="number"]').value, 10) || 0
                         });
                     });
                     const data = {
@@ -1047,6 +1052,7 @@
                     closeModal('add-order-modal');
                 } catch(error) {
                     console.error("Error saving order:", error);
+                    alert("Could not save order. Check console for details.");
                 }
             });
         }
@@ -1301,7 +1307,7 @@
 
         window.populateProviderDropdowns = function() {
             const select = document.getElementById('ingredient-provider');
-            select.innerHTML = `<option value="">Select a provider...</option>` + providersCache.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            select.innerHTML = `<option value="">-- Select a Provider (Optional) --</option>` + providersCache.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
 
         window.populateCustomerDropdowns = function() {
