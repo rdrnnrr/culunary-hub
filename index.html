@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Culinary Business Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -458,12 +458,12 @@
 
         // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
         const firebaseConfig = {
-            apiKey: "AIzaSyCFoDduJ9pRL2lAGvYek3AyhVb066SdpGw",
-            authDomain: "catalina-culinary-hub.firebaseapp.com",
-            projectId: "catalina-culinary-hub",
-            storageBucket: "catalina-culinary-hub.firebasestorage.app",
-            messagingSenderId: "32561043797",
-            appId: "1:32561043797:web:a9c4454e346845d78677dc"
+            apiKey: "PASTE_YOUR_API_KEY_HERE",
+            authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
+            projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+            storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
+            messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+            appId: "PASTE_YOUR_APP_ID_HERE"
         };
         // --- END OF FIREBASE CONFIGURATION ---
 
@@ -478,6 +478,7 @@
         let recipesCache = [];
         let customersCache = [];
         let ordersCache = [];
+        const businessId = "shared-business-data"; // This is the shared folder for you and Catalina
         
         // --- DOM Elements ---
         const authContainer = document.getElementById('auth-container');
@@ -495,7 +496,7 @@
                 // User is signed in
                 authContainer.style.display = 'none';
                 appContainer.style.display = 'block';
-                userId = user.uid;
+                userId = user.uid; // We still need this for security rules
                 initializeAppState();
             } else {
                 // User is signed out
@@ -565,9 +566,9 @@
 
 
         function getCollectionRef(collectionName) {
-            // IMPORTANT: This now points to a user-specific data path
+            // IMPORTANT: This now points to a SHARED business data path
             if (!userId) return null;
-            return collection(db, 'users', userId, collectionName);
+            return collection(db, 'businesses', businessId, collectionName);
         }
 
         // --- App Initialization ---
