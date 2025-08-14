@@ -37,11 +37,66 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <div id="app-container" class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Authentication Container -->
+    <div id="auth-container" class="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
+        <div class="max-w-sm w-full">
+            <div class="text-center mb-8">
+                <i class="fas fa-utensils text-5xl text-indigo-600"></i>
+                <h1 class="text-3xl font-bold text-gray-800 mt-4">Culinary Business Hub</h1>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form-container" class="bg-white p-8 rounded-lg shadow-lg">
+                <form id="login-form">
+                    <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Login</h2>
+                    <div id="login-error" class="hidden text-red-500 text-sm mb-4 text-center"></div>
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="login-email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="login-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Login</button>
+                </form>
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Don't have an account? <a href="#" id="show-signup" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form-container" class="hidden bg-white p-8 rounded-lg shadow-lg">
+                <form id="signup-form">
+                    <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Create Account</h2>
+                    <div id="signup-error" class="hidden text-red-500 text-sm mb-4 text-center"></div>
+                    <div class="mb-4">
+                        <label for="signup-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="signup-email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="mb-6">
+                        <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="signup-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign Up</button>
+                </form>
+                <p class="text-center text-sm text-gray-600 mt-6">
+                    Already have an account? <a href="#" id="show-login" class="font-medium text-indigo-600 hover:text-indigo-500">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main App Container (hidden by default) -->
+    <div id="app-container" class="hidden max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl font-bold text-indigo-600">Culinary Business Hub</h1>
-            <p class="text-lg text-gray-600 mt-2">Your all-in-one tool for managing your food business with Catalina.</p>
+        <header class="mb-8 flex justify-between items-center">
+            <div class="text-center flex-grow">
+                <h1 class="text-4xl font-bold text-indigo-600">Culinary Business Hub</h1>
+                <p class="text-lg text-gray-600 mt-2">Your all-in-one tool for managing your food business with Catalina.</p>
+            </div>
+            <button id="logout-button" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
         </header>
 
         <!-- Tab Navigation -->
@@ -398,14 +453,19 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, collection, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase Configuration ---
-        // These global variables are provided by the environment.
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "YOUR_API_KEY", authDomain: "YOUR_AUTH_DOMAIN", projectId: "YOUR_PROJECT_ID" };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'culinary-hub-default';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
+        const firebaseConfig = {
+            apiKey: "PASTE_YOUR_API_KEY_HERE",
+            authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
+            projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+            storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
+            messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+            appId: "PASTE_YOUR_APP_ID_HERE"
+        };
+        // --- END OF FIREBASE CONFIGURATION ---
 
         // --- Firebase Initialization ---
         const app = initializeApp(firebaseConfig);
@@ -413,83 +473,136 @@
         const db = getFirestore(app);
 
         let userId = null;
-        let isAuthReady = false;
         let ingredientsCache = [];
         let suppliesCache = [];
         let recipesCache = [];
         let customersCache = [];
         let ordersCache = [];
+        const appId = 'culinary-hub-data'; // A unique identifier for this app's data
 
-        // --- Authentication ---
+        // --- DOM Elements ---
+        const authContainer = document.getElementById('auth-container');
+        const appContainer = document.getElementById('app-container');
+        const loginFormContainer = document.getElementById('login-form-container');
+        const signupFormContainer = document.getElementById('signup-form-container');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const loginError = document.getElementById('login-error');
+        const signupError = document.getElementById('signup-error');
+
+        // --- Authentication Logic ---
         onAuthStateChanged(auth, (user) => {
-            if (user && !isAuthReady) {
-                console.log("User is authenticated with UID:", user.uid);
+            if (user) {
+                // User is signed in
+                authContainer.style.display = 'none';
+                appContainer.style.display = 'block';
                 userId = user.uid;
-                isAuthReady = true;
                 initializeAppState();
+            } else {
+                // User is signed out
+                authContainer.style.display = 'flex';
+                appContainer.style.display = 'none';
+                userId = null;
             }
         });
 
-        (async () => {
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            loginError.classList.add('hidden');
+
             try {
-                if (initialAuthToken) {
-                    console.log("Signing in with custom token.");
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    console.log("No custom token, signing in anonymously.");
-                    await signInAnonymously(auth);
-                }
+                await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
-                console.error("Authentication failed:", error);
-                document.body.innerHTML = `<div class="text-center p-8 text-red-500">Could not authenticate with the database. Please refresh the page.</div>`;
+                console.error("Login Error:", error.message);
+                loginError.textContent = "Failed to login. Please check your email and password.";
+                loginError.classList.remove('hidden');
             }
-        })();
+        });
+
+        // Signup form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            signupError.classList.add('hidden');
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Signup Error:", error.message);
+                signupError.textContent = "Failed to create account. The email might already be in use.";
+                signupError.classList.remove('hidden');
+            }
+        });
+        
+        // Logout button
+        document.getElementById('logout-button').addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Toggle between Login and Signup forms
+        document.getElementById('show-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            loginFormContainer.classList.add('hidden');
+            signupFormContainer.classList.remove('hidden');
+        });
+
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            signupFormContainer.classList.add('hidden');
+            loginFormContainer.classList.remove('hidden');
+        });
+
+        // Initial check for firebase config
+        if (firebaseConfig.apiKey === "PASTE_YOUR_API_KEY_HERE") {
+            document.body.innerHTML = `<div class="text-center p-8 text-red-500 font-bold">Error: Firebase configuration is missing. Please follow the setup instructions to add your configuration to the index.html file.</div>`;
+        }
 
 
         function getCollectionRef(collectionName) {
-            // All data is stored under a path unique to this app instance following the required structure.
-            // Path: artifacts/{appId}/public/data/{collectionName}
             return collection(db, 'artifacts', appId, 'public', 'data', collectionName);
         }
 
         // --- App Initialization ---
         function initializeAppState() {
-            if (!userId || !isAuthReady) return;
+            if (!userId) return;
             console.log("Initializing app state for user:", userId);
             setupListeners();
             setupFormSubmissions();
         }
 
         // --- Real-time Data Listeners ---
+        let listeners = [];
         function setupListeners() {
-            onSnapshot(getCollectionRef('ingredients'), (snapshot) => {
-                ingredientsCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderIngredients();
-            }, (error) => console.error("Ingredients listener error: ", error));
-            onSnapshot(getCollectionRef('supplies'), (snapshot) => {
-                suppliesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderSupplies();
-            }, (error) => console.error("Supplies listener error: ", error));
-            onSnapshot(getCollectionRef('recipes'), (snapshot) => {
-                recipesCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderRecipes();
-            }, (error) => console.error("Recipes listener error: ", error));
-            onSnapshot(getCollectionRef('customers'), (snapshot) => {
-                customersCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderCustomers();
-                populateCustomerDropdowns();
-            }, (error) => console.error("Customers listener error: ", error));
-            onSnapshot(getCollectionRef('orders'), (snapshot) => {
-                ordersCache = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderOrders();
-                updateDashboard();
-            }, (error) => console.error("Orders listener error: ", error));
+            // Detach old listeners if they exist
+            listeners.forEach(unsubscribe => unsubscribe());
+            listeners = [];
+
+            const collections = ['ingredients', 'supplies', 'recipes', 'customers', 'orders'];
+            collections.forEach(name => {
+                const unsubscribe = onSnapshot(getCollectionRef(name), (snapshot) => {
+                    const cacheName = `${name}Cache`;
+                    window[cacheName] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    
+                    // Call the specific render function
+                    const renderFuncName = `render${name.charAt(0).toUpperCase() + name.slice(1)}`;
+                    if(window[renderFuncName]) window[renderFuncName]();
+
+                    // Special cases
+                    if(name === 'customers') populateCustomerDropdowns();
+                    if(name === 'orders') updateDashboard();
+
+                }, (error) => console.error(`${name} listener error: `, error));
+                listeners.push(unsubscribe);
+            });
         }
         
         // --- UI Rendering Functions ---
         
-        // Render Ingredients
-        function renderIngredients() {
+        window.renderIngredients = function() {
             const list = document.getElementById('ingredients-list');
             if (ingredientsCache.length === 0) {
                 list.innerHTML = `<p class="text-gray-500">No ingredients added yet. Click "Add Ingredient" to start.</p>`;
@@ -511,8 +624,7 @@
             }).join('');
         }
 
-        // Render Supplies
-        function renderSupplies() {
+        window.renderSupplies = function() {
             const list = document.getElementById('supplies-list');
             if (suppliesCache.length === 0) {
                 list.innerHTML = `<p class="text-gray-500">No supplies added yet. Click "Add Supply" to start.</p>`;
@@ -533,8 +645,7 @@
             }).join('');
         }
 
-        // Render Recipes
-        function renderRecipes() {
+        window.renderRecipes = function() {
             const list = document.getElementById('recipes-list');
             if (recipesCache.length === 0) {
                 list.innerHTML = `<p class="text-gray-500 col-span-full">No recipes created yet. Click "Create Recipe" to start.</p>`;
@@ -570,8 +681,7 @@
             }).join('');
         }
         
-        // Render Customers
-        function renderCustomers() {
+        window.renderCustomers = function() {
             const list = document.getElementById('customers-list');
              if (customersCache.length === 0) {
                 list.innerHTML = `<p class="text-gray-500">No customers added yet. Click "Add Customer" to start.</p>`;
@@ -589,8 +699,7 @@
             `).join('');
         }
 
-        // Render Orders
-        function renderOrders() {
+        window.renderOrders = function() {
             const list = document.getElementById('orders-list');
             if (ordersCache.length === 0) {
                 list.innerHTML = `<p class="text-gray-500">No orders placed yet. Click "New Order" to start.</p>`;
@@ -641,8 +750,7 @@
             }).join('');
         }
 
-        // Update Dashboard
-        function updateDashboard() {
+        window.updateDashboard = function() {
             const fulfilledOrders = ordersCache.filter(o => o.status === 'Fulfilled');
             let totalRevenue = 0;
             let totalCosts = 0;
@@ -1031,7 +1139,7 @@
             container.appendChild(div);
         }
 
-        function populateCustomerDropdowns() {
+        window.populateCustomerDropdowns = function() {
             const select = document.getElementById('order-customer');
             select.innerHTML = customersCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         }
