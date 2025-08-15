@@ -653,8 +653,17 @@
                 if (!collRef) return; // Don't attach listener if user isn't logged in
 
                 const unsubscribe = onSnapshot(collRef, (snapshot) => {
-                    const cacheName = `${name}Cache`;
-                    window[cacheName] = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    
+                    // Directly assign to the correct cache variable
+                    switch(name) {
+                        case 'providers': providersCache = data; break;
+                        case 'ingredients': ingredientsCache = data; break;
+                        case 'supplies': suppliesCache = data; break;
+                        case 'recipes': recipesCache = data; break;
+                        case 'customers': customersCache = data; break;
+                        case 'orders': ordersCache = data; break;
+                    }
                     
                     // Call the specific render function
                     const renderFuncName = `render${name.charAt(0).toUpperCase() + name.slice(1)}`;
