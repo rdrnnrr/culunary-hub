@@ -1507,7 +1507,6 @@
             container.appendChild(div);
         }
 
-        // --- NEW ---
         window.updateRecipePriceSuggestions = () => {
             const items = [];
             document.querySelectorAll('.recipe-item-row').forEach(row => {
@@ -1633,11 +1632,11 @@
 
                     for(const row of rows) {
                         const columns = row.split(',');
-                        const name = columns[0]?.trim();
-                        const unit = columns[10]?.trim();
-                        const cost = parseFloat(columns[11]);
+                        // *** FIXED: Read from correct columns for Costos.csv ***
+                        const name = columns[1]?.trim();
+                        const cost = parseFloat(columns[2]);
                         
-                        if (name && unit && !isNaN(cost)) {
+                        if (name && !isNaN(cost)) {
                             const existing = ingredientsCache.find(i => i.name.toLowerCase() === name.toLowerCase());
                             if(existing) {
                                 log(`- SKIPPING: Ingredient "${name}" already exists.`);
@@ -1647,9 +1646,9 @@
                             const ingredientData = {
                                 name: name,
                                 providerId: provider.id,
-                                unit: unit,
+                                unit: 'unit', // Default unit
                                 purchaseCost: cost,
-                                purchaseSize: 1,
+                                purchaseSize: 1, // Default size
                                 stock: 0,
                                 yield: 100,
                             };
