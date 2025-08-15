@@ -108,8 +108,8 @@
                 <button onclick="showTab('shopping-list')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-shopping-cart mr-2"></i>Shopping List
                 </button>
-                 <button onclick="showTab('recipe-importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-magic mr-2"></i>Recipe Importer
+                <button onclick="showTab('expenses')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-dollar-sign mr-2"></i>Expenses
                 </button>
                  <button onclick="showTab('importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-file-import mr-2"></i>Importer
@@ -143,6 +143,7 @@
             <!-- Dashboard Tab -->
             <div id="dashboard-tab" class="tab-content active">
                 <h2 class="text-2xl font-semibold mb-4">Business Dashboard</h2>
+                <!-- Main Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-lg shadow">
                         <h3 class="text-gray-500">Total Revenue</h3>
@@ -161,6 +162,26 @@
                         <p id="dashboard-orders" class="text-3xl font-bold">0</p>
                     </div>
                 </div>
+                 <!-- Weekly Stats -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-gray-500">This Week's Income</h3>
+                        <p id="dashboard-this-week-income" class="text-2xl font-bold text-green-500">$0.00</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-gray-500">This Week's Spending</h3>
+                        <p id="dashboard-this-week-spending" class="text-2xl font-bold text-red-500">$0.00</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-gray-500">Last Week's Income</h3>
+                        <p id="dashboard-last-week-income" class="text-2xl font-bold text-green-500">$0.00</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-gray-500">Last Week's Spending</h3>
+                        <p id="dashboard-last-week-spending" class="text-2xl font-bold text-red-500">$0.00</p>
+                    </div>
+                </div>
+                <!-- Recent Orders -->
                 <div class="mt-8 bg-white p-6 rounded-lg shadow">
                     <h3 class="text-xl font-semibold mb-4">Recent Orders</h3>
                     <div id="dashboard-recent-orders" class="space-y-4">
@@ -201,24 +222,18 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Recipe Importer Tab -->
-            <div id="recipe-importer-tab" class="tab-content">
-                <div class="bg-white p-8 rounded-lg shadow-lg">
-                    <h2 class="text-2xl font-semibold mb-4">AI Recipe Importer</h2>
-                    <p class="text-gray-600 mb-6">Paste a URL from a recipe website, and the AI will attempt to extract the ingredients and create a new recipe for you.</p>
-                    <div class="flex gap-2">
-                        <input type="url" id="recipe-url-input" placeholder="https://www.allrecipes.com/..." class="flex-grow block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <button id="import-recipe-btn" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">
-                            <span id="import-btn-text">Import</span>
-                            <i id="import-spinner" class="fas fa-spinner fa-spin hidden"></i>
-                        </button>
-                    </div>
-                    <div id="importer-error" class="text-red-500 text-sm mt-2 hidden"></div>
-                    <div id="importer-result" class="mt-8"></div>
+
+            <!-- Expenses Tab -->
+            <div id="expenses-tab" class="tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold">Manage Expenses</h2>
+                    <button onclick="openModal('add-expense-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Expense</button>
+                </div>
+                <div id="expenses-list" class="bg-white p-4 rounded-lg shadow">
+                    <!-- Expenses list will be populated here -->
                 </div>
             </div>
-
+            
             <!-- Importer Tab -->
             <div id="importer-tab" class="tab-content">
                 <div class="bg-white p-8 rounded-lg shadow-lg space-y-8">
@@ -320,28 +335,28 @@
                     <p>Welcome, Dennis! Here’s a step-by-step guide to get you and Catalina started:</p>
                     <ol>
                         <li>
-                            <strong><i class="fas fa-file-import mr-2 text-indigo-500"></i>Use the Importer:</strong> To get started quickly, go to the "Importer" tab and upload your `Costos.csv` first, then your recipe files.
+                            <strong><i class="fas fa-dollar-sign mr-2 text-indigo-500"></i>Track Expenses:</strong> Use the "Expenses" tab to log any business costs like equipment or rent. This is crucial for accurate profit tracking.
+                        </li>
+                        <li>
+                            <strong><i class="fas fa-shopping-cart mr-2 text-indigo-500"></i>Use the Shopping List:</strong> After generating a list, click "Purchase" on an item to log it as an expense and automatically update your stock.
                         </li>
                         <li>
                             <strong><i class="fas fa-truck mr-2 text-indigo-500"></i>Add Providers:</strong> Go to the "Providers" tab to enter your suppliers like Costco, Sam's Club, etc.
                         </li>
                         <li>
-                            <strong><i class="fas fa-carrot mr-2 text-indigo-500"></i>Add Ingredients:</strong> In the "Ingredients" tab, when you add an item, you can now select who you bought it from. This lets you add "Chicken Breast" from multiple providers to compare costs.
+                            <strong><i class="fas fa-carrot mr-2 text-indigo-500"></i>Add Ingredients & Supplies:</strong> Fill out your ingredients and non-food supplies.
                         </li>
                         <li>
-                            <strong><i class="fas fa-box mr-2 text-indigo-500"></i>Add Supplies:</strong> This is for non-food items like containers, forks, or napkins.
-                        </li>
-                        <li>
-                            <strong><i class="fas fa-book-open mr-2 text-indigo-500"></i>Create Recipes:</strong> In the "Recipes" tab, build your menu items by selecting from the ingredients and supplies you've entered.
+                            <strong><i class="fas fa-book-open mr-2 text-indigo-500"></i>Create Recipes:</strong> Build your menu items by selecting from the ingredients and supplies you've entered.
                         </li>
                          <li>
-                            <strong><i class="fas fa-users mr-2 text-indigo-500"></i>Manage Customers:</strong> Keep track of your clients in the "Customers" tab.
+                            <strong><i class="fas fa-users mr-2 text-indigo-500"></i>Manage Customers:</strong> Keep track of your clients.
                         </li>
                         <li>
-                            <strong><i class="fas fa-receipt mr-2 text-indigo-500"></i>Log Orders:</strong> Head to the "Orders" tab to create, track, and fulfill customer orders.
+                            <strong><i class="fas fa-receipt mr-2 text-indigo-500"></i>Log Orders:</strong> Create, track, and fulfill customer orders.
                         </li>
                          <li>
-                            <strong><i class="fas fa-chart-line mr-2 text-indigo-500"></i>Check the Dashboard:</strong> Get a real-time overview of your revenue, costs, and profits.
+                            <strong><i class="fas fa-chart-line mr-2 text-indigo-500"></i>Check the Dashboard:</strong> Get a real-time overview of your revenue, costs (including all expenses), and profits, with a weekly breakdown.
                         </li>
                     </ol>
                     <p class="mt-6 font-semibold text-indigo-600">This tool saves all your data in real-time, so you and Catalina can collaborate from anywhere. Good luck with the business!</p>
@@ -351,6 +366,45 @@
     </div>
 
     <!-- Modals -->
+     <!-- Add Expense Modal -->
+    <div id="add-expense-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Log Expense</h3>
+            <form id="add-expense-form" class="space-y-4">
+                <input type="hidden" id="expense-id">
+                <div>
+                    <label for="expense-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <input type="text" id="expense-description" required placeholder="e.g., New Baking Sheets" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="expense-amount" class="block text-sm font-medium text-gray-700">Amount ($)</label>
+                        <input type="number" id="expense-amount" required step="0.01" min="0" placeholder="500.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="expense-category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="expense-category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option>Equipment</option>
+                            <option>Marketing</option>
+                            <option>Rent/Utilities</option>
+                            <option>Ingredients</option>
+                            <option>Supplies</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+                 <div>
+                    <label for="expense-date" class="block text-sm font-medium text-gray-700">Date of Expense</label>
+                    <input type="date" id="expense-date" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" onclick="closeModal('add-expense-modal')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">Cancel</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
      <!-- Add Provider Modal -->
     <div id="add-provider-modal" class="modal-backdrop">
         <div class="modal-content">
@@ -464,15 +518,9 @@
             <h3 class="text-xl font-semibold mb-4">Create New Recipe</h3>
             <form id="add-recipe-form" class="space-y-4">
                 <input type="hidden" id="recipe-id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="recipe-name" class="block text-sm font-medium text-gray-700">Recipe Name</label>
-                        <input type="text" id="recipe-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="recipe-price" class="block text-sm font-medium text-gray-700">Selling Price ($)</label>
-                        <input type="number" id="recipe-price" step="0.01" min="0" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
+                <div>
+                     <label for="recipe-name" class="block text-sm font-medium text-gray-700">Recipe Name</label>
+                     <input type="text" id="recipe-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 
                 <!-- Recipe Items -->
@@ -484,6 +532,25 @@
                     <div class="flex gap-2">
                         <button type="button" onclick="addRecipeItem('ingredient')" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300"><i class="fas fa-plus mr-1"></i>Add Ingredient</button>
                         <button type="button" onclick="addRecipeItem('supply')" class="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300"><i class="fas fa-plus mr-1"></i>Add Supply</button>
+                    </div>
+                </div>
+
+                <!-- Pricing Helper -->
+                <div class="p-4 bg-gray-50 rounded-lg space-y-3 border border-gray-200">
+                    <h4 class="text-lg font-medium text-gray-800">Pricing Assistant</h4>
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">Calculated Cost:</span>
+                        <span id="recipe-modal-cost" class="font-bold text-lg text-red-600">$0.00</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Suggested Prices (based on Food Cost %):</label>
+                        <div id="price-suggestions" class="flex flex-wrap gap-2 mt-1">
+                            <!-- Buttons will be generated here by JS -->
+                        </div>
+                    </div>
+                    <div>
+                        <label for="recipe-price" class="block text-sm font-medium text-gray-700">Final Selling Price ($)</label>
+                        <input type="number" id="recipe-price" step="0.01" min="0" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
                 </div>
 
@@ -584,7 +651,7 @@
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, collection, addDoc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, where, writeBatch, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION HERE ---
         const firebaseConfig = {
@@ -609,8 +676,9 @@
         let recipesCache = [];
         let customersCache = [];
         let ordersCache = [];
+        let expensesCache = [];
         let shoppingList = {};
-        const businessId = "shared-business-data"; // This is the shared folder for you and Catalina
+        const businessId = "shared-business-data";
         
         // --- DOM Elements ---
         const authContainer = document.getElementById('auth-container');
@@ -625,29 +693,24 @@
         // --- Authentication Logic ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in
                 authContainer.style.display = 'none';
                 appContainer.style.display = 'block';
-                userId = user.uid; // We still need this for security rules
+                userId = user.uid;
                 initializeAppState();
             } else {
-                // User is signed out
                 authContainer.style.display = 'flex';
                 appContainer.style.display = 'none';
                 userId = null;
-                // Detach listeners when logged out
                 listeners.forEach(unsubscribe => unsubscribe());
                 listeners = [];
             }
         });
 
-        // Login form submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             loginError.classList.add('hidden');
-
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
@@ -657,13 +720,11 @@
             }
         });
 
-        // Signup form submission
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             signupError.classList.add('hidden');
-
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
             } catch (error) {
@@ -673,32 +734,23 @@
             }
         });
         
-        // Logout button
-        document.getElementById('logout-button').addEventListener('click', () => {
-            signOut(auth);
-        });
-
-        // Toggle between Login and Signup forms
+        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
         document.getElementById('show-signup').addEventListener('click', (e) => {
             e.preventDefault();
             loginFormContainer.classList.add('hidden');
             signupFormContainer.classList.remove('hidden');
         });
-
         document.getElementById('show-login').addEventListener('click', (e) => {
             e.preventDefault();
             signupFormContainer.classList.add('hidden');
             loginFormContainer.classList.remove('hidden');
         });
 
-        // Initial check for firebase config
         if (firebaseConfig.apiKey === "PASTE_YOUR_API_KEY_HERE") {
-            document.body.innerHTML = `<div class="text-center p-8 text-red-500 font-bold">Error: Firebase configuration is missing. Please follow the setup instructions to add your configuration to the index.html file.</div>`;
+            document.body.innerHTML = `<div class="text-center p-8 text-red-500 font-bold">Error: Firebase configuration is missing.</div>`;
         }
 
-
         function getCollectionRef(collectionName) {
-            // IMPORTANT: This now points to a SHARED business data path
             if (!userId) return null;
             return collection(db, 'businesses', businessId, collectionName);
         }
@@ -709,25 +761,23 @@
             console.log("Initializing app state for user:", userId);
             setupListeners();
             setupFormSubmissions();
-            setupImporter(); // Setup listeners for the new importer
+            setupImporter();
         }
 
         // --- Real-time Data Listeners ---
         let listeners = [];
         function setupListeners() {
-            // Detach old listeners if they exist to prevent memory leaks on re-login
             listeners.forEach(unsubscribe => unsubscribe());
             listeners = [];
 
-            const collections = ['providers', 'ingredients', 'supplies', 'recipes', 'customers', 'orders'];
+            const collections = ['providers', 'ingredients', 'supplies', 'recipes', 'customers', 'orders', 'expenses'];
             collections.forEach(name => {
                 const collRef = getCollectionRef(name);
-                if (!collRef) return; // Don't attach listener if user isn't logged in
+                if (!collRef) return;
 
                 const unsubscribe = onSnapshot(collRef, (snapshot) => {
                     const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     
-                    // Directly assign to the correct cache variable
                     switch(name) {
                         case 'providers': providersCache = data; break;
                         case 'ingredients': ingredientsCache = data; break;
@@ -735,17 +785,16 @@
                         case 'recipes': recipesCache = data; break;
                         case 'customers': customersCache = data; break;
                         case 'orders': ordersCache = data; break;
+                        case 'expenses': expensesCache = data; break;
                     }
                     
-                    // Call the specific render function
                     const renderFuncName = `render${name.charAt(0).toUpperCase() + name.slice(1)}`;
                     if(window[renderFuncName]) window[renderFuncName]();
 
-                    // Special cases
+                    if(name === 'orders' || name === 'expenses') updateDashboard();
                     if(name === 'providers') populateProviderDropdowns();
                     if(name === 'customers') populateCustomerDropdowns();
                     if(name === 'recipes') populateShoppingListRecipeDropdown();
-                    if(name === 'orders') updateDashboard();
 
                 }, (error) => console.error(`${name} listener error: `, error));
                 listeners.push(unsubscribe);
@@ -922,22 +971,67 @@
             }).join('');
         }
 
-        window.updateDashboard = function() {
-            const fulfilledOrders = ordersCache.filter(o => o.status === 'Fulfilled');
-            let totalRevenue = 0;
-            let totalCosts = 0;
+        window.renderExpenses = function() {
+            const list = document.getElementById('expenses-list');
+            if (expensesCache.length === 0) {
+                list.innerHTML = `<p class="text-gray-500">No expenses logged yet. Click "Add Expense" to start.</p>`;
+                return;
+            }
+            const sortedExpenses = expensesCache.sort((a, b) => (b.date?.toDate() || 0) - (a.date?.toDate() || 0));
 
-            fulfilledOrders.forEach(order => {
-                const { totalPrice, totalCost } = calculateOrderTotals(order);
-                totalRevenue += totalPrice;
-                totalCosts += totalCost;
-            });
+            list.innerHTML = sortedExpenses.map(exp => `
+                <div class="p-4 border-b grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
+                    <div class="font-semibold">${exp.description}</div>
+                    <div class="text-sm text-gray-600">${exp.category}</div>
+                    <div class="text-sm text-gray-600">${exp.date?.toDate().toLocaleDateString() || 'N/A'}</div>
+                    <div class="flex justify-end items-center gap-4">
+                        <span class="font-semibold text-red-500">$${exp.amount.toFixed(2)}</span>
+                        <div class="flex gap-2">
+                            <button onclick="editExpense('${exp.id}')" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-pencil-alt"></i></button>
+                            <button onclick="confirmDelete('expense', '${exp.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.updateDashboard = function() {
+            // Overall Stats
+            const fulfilledOrders = ordersCache.filter(o => o.status === 'Fulfilled');
+            const totalRevenue = fulfilledOrders.reduce((sum, order) => sum + calculateOrderTotals(order).totalPrice, 0);
+            const totalCOGS = fulfilledOrders.reduce((sum, order) => sum + calculateOrderTotals(order).totalCost, 0);
+            const otherExpenses = expensesCache.reduce((sum, exp) => sum + exp.amount, 0);
+            const totalCosts = totalCOGS + otherExpenses;
 
             document.getElementById('dashboard-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
             document.getElementById('dashboard-costs').textContent = `$${totalCosts.toFixed(2)}`;
             document.getElementById('dashboard-profit').textContent = `$${(totalRevenue - totalCosts).toFixed(2)}`;
             document.getElementById('dashboard-orders').textContent = fulfilledOrders.length;
             
+            // Weekly Stats
+            const { thisWeek, lastWeek } = getWeekRanges();
+
+            const thisWeekIncome = fulfilledOrders
+                .filter(o => o.createdAt.toDate() >= thisWeek.start && o.createdAt.toDate() <= thisWeek.end)
+                .reduce((sum, order) => sum + calculateOrderTotals(order).totalPrice, 0);
+
+            const thisWeekSpending = expensesCache
+                .filter(e => e.date.toDate() >= thisWeek.start && e.date.toDate() <= thisWeek.end)
+                .reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const lastWeekIncome = fulfilledOrders
+                .filter(o => o.createdAt.toDate() >= lastWeek.start && o.createdAt.toDate() <= lastWeek.end)
+                .reduce((sum, order) => sum + calculateOrderTotals(order).totalPrice, 0);
+
+            const lastWeekSpending = expensesCache
+                .filter(e => e.date.toDate() >= lastWeek.start && e.date.toDate() <= lastWeek.end)
+                .reduce((sum, exp) => sum + exp.amount, 0);
+
+            document.getElementById('dashboard-this-week-income').textContent = `$${thisWeekIncome.toFixed(2)}`;
+            document.getElementById('dashboard-this-week-spending').textContent = `$${thisWeekSpending.toFixed(2)}`;
+            document.getElementById('dashboard-last-week-income').textContent = `$${lastWeekIncome.toFixed(2)}`;
+            document.getElementById('dashboard-last-week-spending').textContent = `$${lastWeekSpending.toFixed(2)}`;
+
             // Recent Orders
             const recentOrdersContainer = document.getElementById('dashboard-recent-orders');
             const recentOrders = ordersCache.sort((a, b) => (b.createdAt?.toDate() || 0) - (a.createdAt?.toDate() || 0)).slice(0, 5);
@@ -964,7 +1058,30 @@
 
         // --- Form Submissions ---
         function setupFormSubmissions() {
-            // Provider Form
+            document.getElementById('add-expense-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const collRef = getCollectionRef('expenses');
+                    if(!collRef) throw new Error("User not authenticated.");
+                    const id = document.getElementById('expense-id').value;
+                    const data = {
+                        description: document.getElementById('expense-description').value,
+                        amount: parseFloat(document.getElementById('expense-amount').value),
+                        category: document.getElementById('expense-category').value,
+                        date: Timestamp.fromDate(new Date(document.getElementById('expense-date').value + 'T00:00:00')),
+                    };
+                    if (id) {
+                        await setDoc(doc(collRef, id), data);
+                    } else {
+                        await addDoc(collRef, data);
+                    }
+                    closeModal('add-expense-modal');
+                } catch(error) {
+                    console.error("Error saving expense:", error);
+                    alert("Could not save expense. Check console for details.");
+                }
+            });
+
             document.getElementById('add-provider-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -988,7 +1105,6 @@
                 }
             });
 
-            // Ingredient Form
             document.getElementById('add-ingredient-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -1016,7 +1132,6 @@
                 }
             });
 
-            // Supply Form
             document.getElementById('add-supply-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -1041,7 +1156,6 @@
                 }
             });
             
-            // Customer Form
             document.getElementById('add-customer-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -1065,7 +1179,6 @@
                 }
             });
 
-            // Recipe Form
             document.getElementById('add-recipe-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -1098,7 +1211,6 @@
                 }
             });
 
-            // Order Form
             document.getElementById('add-order-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 try {
@@ -1117,13 +1229,13 @@
                         status: document.getElementById('order-status').value,
                         discount: parseFloat(document.getElementById('order-discount').value) || 0,
                         items: items.filter(item => item.recipeId && item.quantity > 0),
-                        createdAt: new Date()
+                        createdAt: Timestamp.now()
                     };
                     
                     const oldOrder = id ? ordersCache.find(o => o.id === id) : null;
                     
                     if (id) {
-                        delete data.createdAt; // Don't overwrite creation date on edit
+                        delete data.createdAt;
                         await setDoc(doc(collRef, id), data, { merge: true });
                     } else {
                         await addDoc(collRef, data);
@@ -1198,6 +1310,7 @@
             rec.items.forEach(item => {
                 addRecipeItem(item.type, item.id, item.quantity);
             });
+            updateRecipePriceSuggestions(); // <-- Recalculate price suggestions on edit
             openModal('add-recipe-modal');
         };
 
@@ -1216,6 +1329,17 @@
             });
             openModal('add-order-modal');
         };
+
+        window.editExpense = (id) => {
+            const exp = expensesCache.find(e => e.id === id);
+            if (!exp) return;
+            document.getElementById('expense-id').value = id;
+            document.getElementById('expense-description').value = exp.description;
+            document.getElementById('expense-amount').value = exp.amount;
+            document.getElementById('expense-category').value = exp.category;
+            document.getElementById('expense-date').valueAsDate = exp.date.toDate();
+            openModal('add-expense-modal');
+        };
         
         window.confirmDelete = (type, id) => {
             const modal = document.getElementById('delete-confirm-modal');
@@ -1232,11 +1356,9 @@
             try {
                 const collRef = getCollectionRef(type + 's');
                 if(!collRef) throw new Error("User not authenticated.");
-                // If an order is deleted, we need to reverse stock changes if it was fulfilled
                 if (type === 'order') {
                     const order = ordersCache.find(o => o.id === id);
                     if (order && order.status === 'Fulfilled') {
-                        // Re-add stock
                         await updateStockLevels(null, order);
                     }
                 }
@@ -1288,9 +1410,8 @@
 
         async function updateStockLevels(newOrder, oldOrder) {
             const batch = writeBatch(db);
-            const stockChanges = {}; // { type: { id: change } }
+            const stockChanges = {};
 
-            // Calculate changes from old order (if it exists and was fulfilled)
             if (oldOrder && oldOrder.status === 'Fulfilled') {
                 oldOrder.items.forEach(item => {
                     const recipe = recipesCache.find(r => r.id === item.recipeId);
@@ -1298,13 +1419,12 @@
                         recipe.items.forEach(recipeItem => {
                             const change = item.quantity * recipeItem.quantity;
                             if (!stockChanges[recipeItem.type]) stockChanges[recipeItem.type] = {};
-                            stockChanges[recipeItem.type][recipeItem.id] = (stockChanges[recipeItem.type][recipeItem.id] || 0) + change; // Add back
+                            stockChanges[recipeItem.type][recipeItem.id] = (stockChanges[recipeItem.type][recipeItem.id] || 0) + change;
                         });
                     }
                 });
             }
 
-            // Calculate changes from new order (if it exists and is fulfilled)
             if (newOrder && newOrder.status === 'Fulfilled') {
                  newOrder.items.forEach(item => {
                     const recipe = recipesCache.find(r => r.id === item.recipeId);
@@ -1312,13 +1432,12 @@
                         recipe.items.forEach(recipeItem => {
                             const change = item.quantity * recipeItem.quantity;
                             if (!stockChanges[recipeItem.type]) stockChanges[recipeItem.type] = {};
-                            stockChanges[recipeItem.type][recipeItem.id] = (stockChanges[recipeItem.type][recipeItem.id] || 0) - change; // Subtract
+                            stockChanges[recipeItem.type][recipeItem.id] = (stockChanges[recipeItem.type][recipeItem.id] || 0) - change;
                         });
                     }
                 });
             }
 
-            // Apply the calculated changes
             for (const type in stockChanges) {
                 for (const id in stockChanges[type]) {
                     const change = stockChanges[type][id];
@@ -1358,15 +1477,16 @@
             const options = cache.map(item => `<option value="${item.id}" ${item.id === selectedId ? 'selected' : ''}>${item.name} ${item.providerId ? `(${providersCache.find(p=>p.id === item.providerId)?.name || ''})` : ''}</option>`).join('');
 
             div.innerHTML = `
-                <select class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                <select class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" onchange="updateRecipePriceSuggestions()">
                     <option value="">Select ${type}...</option>
                     ${options}
                 </select>
-                <input type="number" value="${quantity}" min="0" step="any" class="w-24 rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Qty">
+                <input type="number" value="${quantity}" min="0" step="any" class="w-24 rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Qty" oninput="updateRecipePriceSuggestions()">
                 <span class="text-sm text-gray-500">${type === 'ingredient' ? (cache.find(i=>i.id===selectedId)?.unit || '') : 'unit(s)'}</span>
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                <button type="button" onclick="this.parentElement.remove(); updateRecipePriceSuggestions();" class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
             `;
             container.appendChild(div);
+            updateRecipePriceSuggestions();
         };
 
         window.addOrderItem = (selectedId = '', quantity = 1) => {
@@ -1385,6 +1505,40 @@
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
             `;
             container.appendChild(div);
+        }
+
+        // --- NEW ---
+        window.updateRecipePriceSuggestions = () => {
+            const items = [];
+            document.querySelectorAll('.recipe-item-row').forEach(row => {
+                items.push({
+                    type: row.dataset.type,
+                    id: row.querySelector('select').value,
+                    quantity: parseFloat(row.querySelector('input[type="number"]').value) || 0
+                });
+            });
+
+            const cost = calculateRecipeCost({ items });
+            document.getElementById('recipe-modal-cost').textContent = `$${cost.toFixed(2)}`;
+
+            const suggestionsContainer = document.getElementById('price-suggestions');
+            const priceInput = document.getElementById('recipe-price');
+            const margins = [0.30, 0.35, 0.40, 0.50]; // Food Cost %
+
+            suggestionsContainer.innerHTML = '';
+            if (cost > 0) {
+                margins.forEach(margin => {
+                    const suggestedPrice = cost / margin;
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-md hover:bg-gray-300';
+                    button.textContent = `${margin*100}% FC: $${suggestedPrice.toFixed(2)}`;
+                    button.onclick = () => {
+                        priceInput.value = suggestedPrice.toFixed(2);
+                    };
+                    suggestionsContainer.appendChild(button);
+                });
+            }
         }
 
         window.populateProviderDropdowns = function() {
@@ -1411,14 +1565,15 @@
         };
 
         window.openModal = (modalId) => {
-            // Reset forms before opening
             if (modalId !== 'delete-confirm-modal') {
                 const form = document.getElementById(`${modalId.replace('-modal', '')}-form`);
                 if(form) form.reset();
-                // Clear dynamic content
-                if(modalId === 'add-recipe-modal') document.getElementById('recipe-items-container').innerHTML = '';
+                if(modalId === 'add-expense-modal') document.getElementById('expense-date').valueAsDate = new Date();
+                if(modalId === 'add-recipe-modal') {
+                    document.getElementById('recipe-items-container').innerHTML = '';
+                    updateRecipePriceSuggestions();
+                }
                 if(modalId === 'add-order-modal') document.getElementById('order-items-container').innerHTML = '';
-                // Clear hidden IDs
                 const hiddenIdFields = form.querySelectorAll('input[type="hidden"]');
                 hiddenIdFields.forEach(field => field.value = '');
             }
@@ -1429,7 +1584,6 @@
             document.getElementById(modalId).style.display = 'none';
         };
 
-        // Close modal on backdrop click
         window.addEventListener('click', (event) => {
             if (event.target.classList.contains('modal-backdrop')) {
                 closeModal(event.target.id);
@@ -1461,9 +1615,8 @@
 
                 try {
                     const text = await file.text();
-                    const rows = text.split('\n').slice(1); // Skip header
+                    const rows = text.split('\n').slice(1);
 
-                    // Find or create the default provider
                     let provider = providersCache.find(p => p.name === "Spreadsheet Import");
                     if (!provider) {
                         log('Creating "Spreadsheet Import" provider...');
@@ -1480,14 +1633,11 @@
 
                     for(const row of rows) {
                         const columns = row.split(',');
-                        // Assuming format: name,,,,,,,,,unit,cost
                         const name = columns[0]?.trim();
-                        // Find the cost and unit from the correct columns
                         const unit = columns[10]?.trim();
                         const cost = parseFloat(columns[11]);
                         
                         if (name && unit && !isNaN(cost)) {
-                             // Check if ingredient already exists to avoid duplicates
                             const existing = ingredientsCache.find(i => i.name.toLowerCase() === name.toLowerCase());
                             if(existing) {
                                 log(`- SKIPPING: Ingredient "${name}" already exists.`);
@@ -1499,11 +1649,11 @@
                                 providerId: provider.id,
                                 unit: unit,
                                 purchaseCost: cost,
-                                purchaseSize: 1, // Assuming cost is per 1 unit (e.g., 1 Kg, 1 L)
+                                purchaseSize: 1,
                                 stock: 0,
                                 yield: 100,
                             };
-                            const docRef = doc(ingredientsColl); // Auto-generate ID
+                            const docRef = doc(ingredientsColl);
                             batch.set(docRef, ingredientData);
                             importedCount++;
                         }
@@ -1539,7 +1689,6 @@
                         const text = await file.text();
                         const rows = text.split('\n');
                         
-                        // Extract recipe name from file name or from within the file
                         let recipeName = file.name.replace('.csv', '').replace('list ingr.xlsx - ', '').trim();
                         const recipeRow = rows.find(r => r.toLowerCase().startsWith('receta'));
                         if (recipeRow) {
@@ -1549,7 +1698,6 @@
                         log(`\n--- Importing Recipe: ${recipeName} ---`);
 
                         const items = [];
-                        // Find the start of the ingredients cost table
                         const startIndex = rows.findIndex(r => r.toLowerCase().startsWith('peso neto,fac. correccion'));
                         if (startIndex === -1) {
                             log(`- WARNING: Could not find ingredient list for "${recipeName}". Skipping.`);
@@ -1564,7 +1712,6 @@
                             const ingredientName = cols[4]?.trim();
 
                             if (ingredientName && !isNaN(quantity) && quantity > 0) {
-                                // Find matching ingredient in cache (case-insensitive)
                                 const matchedIngredient = ingredientsCache.find(i => i.name.toLowerCase() === ingredientName.toLowerCase());
                                 if (matchedIngredient) {
                                     items.push({
@@ -1582,7 +1729,7 @@
                         if (items.length > 0) {
                             const recipeData = {
                                 name: recipeName,
-                                price: 0, // Default price to 0
+                                price: 0,
                                 items: items
                             };
                             await addDoc(getCollectionRef('recipes'), recipeData);
@@ -1600,6 +1747,29 @@
                 log('\n--- All recipe imports finished. ---');
                 importRecipesBtn.disabled = false;
             });
+        }
+
+        function getWeekRanges() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const dayOfWeek = today.getDay(); 
+
+            const thisWeekStart = new Date(today);
+            thisWeekStart.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+
+            const thisWeekEnd = new Date(thisWeekStart);
+            thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
+
+            const lastWeekStart = new Date(thisWeekStart);
+            lastWeekStart.setDate(thisWeekStart.getDate() - 7);
+            
+            const lastWeekEnd = new Date(thisWeekStart);
+            lastWeekEnd.setDate(thisWeekStart.getDate() - 1);
+
+            return {
+                thisWeek: { start: thisWeekStart, end: thisWeekEnd },
+                lastWeek: { start: lastWeekStart, end: lastWeekEnd }
+            };
         }
 
     </script>
