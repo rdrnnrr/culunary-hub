@@ -105,6 +105,9 @@
                 <button onclick="showTab('dashboard')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </button>
+                <button onclick="showTab('shopping-list')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Shopping List
+                </button>
                  <button onclick="showTab('recipe-importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-magic mr-2"></i>Recipe Importer
                 </button>
@@ -159,6 +162,39 @@
                     <h3 class="text-xl font-semibold mb-4">Recent Orders</h3>
                     <div id="dashboard-recent-orders" class="space-y-4">
                          <p class="text-gray-500">No recent orders to display.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shopping List Tab -->
+            <div id="shopping-list-tab" class="tab-content">
+                 <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-semibold">Shopping List</h2>
+                        <button id="clear-shopping-list-btn" class="text-sm bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200"><i class="fas fa-trash-alt mr-2"></i>Clear List</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <!-- Generate from Orders -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Generate from Open Orders</h3>
+                            <p class="text-sm text-gray-600 mb-4">This will generate a combined list of all ingredients and supplies needed for your "Pending" and "In Progress" orders.</p>
+                            <button id="generate-from-orders-btn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Generate List</button>
+                        </div>
+                        <!-- Add from Recipe -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Add Scaled Recipe to List</h3>
+                            <p class="text-sm text-gray-600 mb-4">Select a recipe and how many portions you need to make.</p>
+                            <div class="flex items-center gap-2">
+                                <select id="shopping-list-recipe-select" class="flex-grow block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></select>
+                                <input type="number" id="shopping-list-quantity" value="1" min="1" class="w-24 rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Qty">
+                                <button id="add-scaled-recipe-btn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="shopping-list-container" class="space-y-2">
+                        <!-- Shopping list items will be populated here -->
                     </div>
                 </div>
             </div>
@@ -539,6 +575,7 @@
         let recipesCache = [];
         let customersCache = [];
         let ordersCache = [];
+        let shoppingList = {};
         const businessId = "shared-business-data"; // This is the shared folder for you and Catalina
         
         // --- DOM Elements ---
@@ -672,6 +709,7 @@
                     // Special cases
                     if(name === 'providers') populateProviderDropdowns();
                     if(name === 'customers') populateCustomerDropdowns();
+                    if(name === 'recipes') populateShoppingListRecipeDropdown();
                     if(name === 'orders') updateDashboard();
 
                 }, (error) => console.error(`${name} listener error: `, error));
@@ -1322,6 +1360,11 @@
         window.populateCustomerDropdowns = function() {
             const select = document.getElementById('order-customer');
             select.innerHTML = `<option value="">Select a customer...</option>` + customersCache.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+        
+        window.populateShoppingListRecipeDropdown = function() {
+            const select = document.getElementById('shopping-list-recipe-select');
+            select.innerHTML = `<option value="">Select a recipe...</option>` + recipesCache.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
         }
 
         // --- UI Control (Tabs, Modals) ---
