@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Culinary Business Hub</title>
-    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -111,6 +111,9 @@
                  <button onclick="showTab('recipe-importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-magic mr-2"></i>Recipe Importer
                 </button>
+                 <button onclick="showTab('importer')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-file-import mr-2"></i>Importer
+                </button>
                 <button onclick="showTab('providers')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <i class="fas fa-truck mr-2"></i>Providers
                 </button>
@@ -216,6 +219,34 @@
                 </div>
             </div>
 
+            <!-- Importer Tab -->
+            <div id="importer-tab" class="tab-content">
+                <div class="bg-white p-8 rounded-lg shadow-lg space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-2">Step 1: Import Ingredients</h2>
+                        <p class="text-gray-600 mb-4">Upload your `Costos.csv` file. This will populate your master ingredients list. All imported ingredients will be linked to a provider called "Spreadsheet Import".</p>
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="ingredients-csv-upload" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/>
+                            <button id="import-ingredients-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 whitespace-nowrap">Import Ingredients</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-2">Step 2: Import Recipes</h2>
+                        <p class="text-gray-600 mb-4">Upload one or more recipe CSV files. The importer will try to match the ingredients in the recipe files with the ingredients you just imported.</p>
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="recipes-csv-upload" accept=".csv" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"/>
+                            <button id="import-recipes-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 whitespace-nowrap">Import Recipes</button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold">Import Log</h3>
+                        <pre id="import-log" class="mt-2 bg-gray-800 text-white text-sm rounded-md p-4 h-64 overflow-y-auto font-mono"></pre>
+                    </div>
+                </div>
+            </div>
+
             <!-- Providers Tab -->
             <div id="providers-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
@@ -288,6 +319,9 @@
                     <h2 class="text-2xl font-semibold mb-4">How to Use the Culinary Business Hub</h2>
                     <p>Welcome, Dennis! Here’s a step-by-step guide to get you and Catalina started:</p>
                     <ol>
+                        <li>
+                            <strong><i class="fas fa-file-import mr-2 text-indigo-500"></i>Use the Importer:</strong> To get started quickly, go to the "Importer" tab and upload your `Costos.csv` first, then your recipe files.
+                        </li>
                         <li>
                             <strong><i class="fas fa-truck mr-2 text-indigo-500"></i>Add Providers:</strong> Go to the "Providers" tab to enter your suppliers like Costco, Sam's Club, etc.
                         </li>
@@ -557,7 +591,7 @@
             apiKey: "AIzaSyCFoDduJ9pRL2lAGvYek3AyhVb066SdpGw",
             authDomain: "catalina-culinary-hub.firebaseapp.com",
             projectId: "catalina-culinary-hub",
-            storageBucket: "catalina-culinary-hub.firebasestorage.app",
+            storageBucket: "catalina-culinary-hub.appspot.com",
             messagingSenderId: "32561043797",
             appId: "1:32561043797:web:a9c4454e346845d78677dc"
         };
@@ -675,6 +709,7 @@
             console.log("Initializing app state for user:", userId);
             setupListeners();
             setupFormSubmissions();
+            setupImporter(); // Setup listeners for the new importer
         }
 
         // --- Real-time Data Listeners ---
@@ -796,7 +831,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="text-xl font-bold">${rec.name}</h3>
-                            <p class="text-indigo-600 font-semibold">Sell Price: $${rec.price.toFixed(2)}</p>
+                            <p class="text-indigo-600 font-semibold">Sell Price: $${rec.price ? rec.price.toFixed(2) : '0.00'}</p>
                         </div>
                         <div class="flex gap-2">
                              <button onclick="editRecipe('${rec.id}')" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-pencil-alt"></i></button>
@@ -810,7 +845,7 @@
                     <div class="pt-4 border-t">
                         <label class="text-sm font-medium">Profit Calculator</label>
                         <div class="flex items-center gap-2 mt-1">
-                            <input type="number" value="1" min="1" class="w-20 rounded-md border-gray-300 shadow-sm text-sm" oninput="updateMultiportionProfit(this, ${cost}, ${rec.price})">
+                            <input type="number" value="1" min="1" class="w-20 rounded-md border-gray-300 shadow-sm text-sm" oninput="updateMultiportionProfit(this, ${cost}, ${rec.price || 0})">
                             <span id="multi-profit-${rec.id}" class="text-sm font-semibold">Profit: $${profit.toFixed(2)}</span>
                         </div>
                     </div>
@@ -865,7 +900,7 @@
                         <div class="flex items-center gap-4">
                             <span class="px-3 py-1 text-sm font-medium rounded-full ${statusColor}">${order.status}</span>
                              <div class="flex gap-2">
-                                <button onclick="editOrder('${order.id}')" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-pencil-alt"></i></button>
+                                 <button onclick="editOrder('${order.id}')" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-pencil-alt"></i></button>
                                 <button onclick="confirmDelete('order', '${order.id}')" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
@@ -1243,7 +1278,7 @@
                 const recipe = recipesCache.find(r => r.id === item.recipeId);
                 if (recipe) {
                     totalCost += calculateRecipeCost(recipe) * item.quantity;
-                    subtotalPrice += recipe.price * item.quantity;
+                    subtotalPrice += (recipe.price || 0) * item.quantity;
                 }
             });
             const discountAmount = subtotalPrice * (order.discount / 100);
@@ -1400,6 +1435,172 @@
                 closeModal(event.target.id);
             }
         });
+
+        // --- CSV Importer Logic ---
+        function setupImporter() {
+            const logElement = document.getElementById('import-log');
+            const importIngredientsBtn = document.getElementById('import-ingredients-btn');
+            const importRecipesBtn = document.getElementById('import-recipes-btn');
+            const ingredientsFileInput = document.getElementById('ingredients-csv-upload');
+            const recipesFileInput = document.getElementById('recipes-csv-upload');
+
+            const log = (message) => {
+                logElement.textContent += message + '\n';
+                logElement.scrollTop = logElement.scrollHeight;
+            };
+
+            importIngredientsBtn.addEventListener('click', async () => {
+                const file = ingredientsFileInput.files[0];
+                if (!file) {
+                    log('ERROR: Please select an ingredients CSV file first.');
+                    return;
+                }
+
+                log(`Starting ingredient import from ${file.name}...`);
+                importIngredientsBtn.disabled = true;
+
+                try {
+                    const text = await file.text();
+                    const rows = text.split('\n').slice(1); // Skip header
+
+                    // Find or create the default provider
+                    let provider = providersCache.find(p => p.name === "Spreadsheet Import");
+                    if (!provider) {
+                        log('Creating "Spreadsheet Import" provider...');
+                        const providerRef = await addDoc(getCollectionRef('providers'), { name: "Spreadsheet Import", contact: "", notes: "Auto-generated for CSV import." });
+                        provider = { id: providerRef.id, name: "Spreadsheet Import" };
+                        log(`Provider created with ID: ${provider.id}`);
+                    } else {
+                         log(`Found existing "Spreadsheet Import" provider.`);
+                    }
+                    
+                    const batch = writeBatch(db);
+                    const ingredientsColl = getCollectionRef('ingredients');
+                    let importedCount = 0;
+
+                    for(const row of rows) {
+                        const columns = row.split(',');
+                        // Assuming format: name,,,,,,,,,unit,cost
+                        const name = columns[0]?.trim();
+                        // Find the cost and unit from the correct columns
+                        const unit = columns[10]?.trim();
+                        const cost = parseFloat(columns[11]);
+                        
+                        if (name && unit && !isNaN(cost)) {
+                             // Check if ingredient already exists to avoid duplicates
+                            const existing = ingredientsCache.find(i => i.name.toLowerCase() === name.toLowerCase());
+                            if(existing) {
+                                log(`- SKIPPING: Ingredient "${name}" already exists.`);
+                                continue;
+                            }
+
+                            const ingredientData = {
+                                name: name,
+                                providerId: provider.id,
+                                unit: unit,
+                                purchaseCost: cost,
+                                purchaseSize: 1, // Assuming cost is per 1 unit (e.g., 1 Kg, 1 L)
+                                stock: 0,
+                                yield: 100,
+                            };
+                            const docRef = doc(ingredientsColl); // Auto-generate ID
+                            batch.set(docRef, ingredientData);
+                            importedCount++;
+                        }
+                    }
+                    
+                    await batch.commit();
+                    log(`SUCCESS: Imported ${importedCount} new ingredients.`);
+
+                } catch (error) {
+                    log(`FATAL ERROR during ingredient import: ${error.message}`);
+                    console.error(error);
+                } finally {
+                    importIngredientsBtn.disabled = false;
+                }
+            });
+
+            importRecipesBtn.addEventListener('click', async () => {
+                const files = recipesFileInput.files;
+                 if (files.length === 0) {
+                    log('ERROR: Please select one or more recipe CSV files.');
+                    return;
+                }
+                if (ingredientsCache.length === 0) {
+                    log('ERROR: Please import ingredients first. Cannot link recipe items.');
+                    return;
+                }
+
+                log(`Starting recipe import for ${files.length} files...`);
+                importRecipesBtn.disabled = true;
+
+                for (const file of files) {
+                    try {
+                        const text = await file.text();
+                        const rows = text.split('\n');
+                        
+                        // Extract recipe name from file name or from within the file
+                        let recipeName = file.name.replace('.csv', '').replace('list ingr.xlsx - ', '').trim();
+                        const recipeRow = rows.find(r => r.toLowerCase().startsWith('receta'));
+                        if (recipeRow) {
+                            recipeName = recipeRow.split(',')[2]?.trim() || recipeName;
+                        }
+                        
+                        log(`\n--- Importing Recipe: ${recipeName} ---`);
+
+                        const items = [];
+                        // Find the start of the ingredients cost table
+                        const startIndex = rows.findIndex(r => r.toLowerCase().startsWith('peso neto,fac. correccion'));
+                        if (startIndex === -1) {
+                            log(`- WARNING: Could not find ingredient list for "${recipeName}". Skipping.`);
+                            continue;
+                        }
+
+                        const recipeRows = rows.slice(startIndex + 1);
+                        for(const row of recipeRows) {
+                            const cols = row.split(',');
+                            const quantity = parseFloat(cols[0]);
+                            const unit = cols[3]?.trim();
+                            const ingredientName = cols[4]?.trim();
+
+                            if (ingredientName && !isNaN(quantity) && quantity > 0) {
+                                // Find matching ingredient in cache (case-insensitive)
+                                const matchedIngredient = ingredientsCache.find(i => i.name.toLowerCase() === ingredientName.toLowerCase());
+                                if (matchedIngredient) {
+                                    items.push({
+                                        type: 'ingredient',
+                                        id: matchedIngredient.id,
+                                        quantity: quantity
+                                    });
+                                    log(`  - Added: ${quantity} ${unit || ''} of ${ingredientName}`);
+                                } else {
+                                    log(`  - WARNING: Ingredient "${ingredientName}" not found in master list. Skipping.`);
+                                }
+                            }
+                        }
+
+                        if (items.length > 0) {
+                            const recipeData = {
+                                name: recipeName,
+                                price: 0, // Default price to 0
+                                items: items
+                            };
+                            await addDoc(getCollectionRef('recipes'), recipeData);
+                            log(`- SUCCESS: Recipe "${recipeName}" imported with ${items.length} items.`);
+                        } else {
+                            log(`- INFO: No valid ingredients found for "${recipeName}". Recipe not created.`);
+                        }
+
+                    } catch (error) {
+                         log(`- FATAL ERROR importing ${file.name}: ${error.message}`);
+                         console.error(error);
+                    }
+                }
+
+                log('\n--- All recipe imports finished. ---');
+                importRecipesBtn.disabled = false;
+            });
+        }
 
     </script>
 </body>
