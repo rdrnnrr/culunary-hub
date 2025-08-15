@@ -227,7 +227,7 @@
             <div id="expenses-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Expenses</h2>
-                    <button onclick="openModal('add-expense-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Expense</button>
+                    <button onclick="prepareModal('add-expense-modal'); openModal('add-expense-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Expense</button>
                 </div>
                 <div id="expenses-list" class="bg-white p-4 rounded-lg shadow">
                     <!-- Expenses list will be populated here -->
@@ -266,7 +266,7 @@
             <div id="providers-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Providers</h2>
-                    <button onclick="openModal('add-provider-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Provider</button>
+                    <button onclick="prepareModal('add-provider-modal'); openModal('add-provider-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Provider</button>
                 </div>
                 <div id="providers-list" class="bg-white p-4 rounded-lg shadow">
                     <!-- Providers list will be populated here -->
@@ -277,7 +277,7 @@
             <div id="ingredients-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Ingredients</h2>
-                    <button onclick="openModal('add-ingredient-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Ingredient</button>
+                    <button onclick="prepareModal('add-ingredient-modal'); openModal('add-ingredient-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Ingredient</button>
                 </div>
                 <div id="ingredients-list" class="bg-white p-4 rounded-lg shadow">
                     <!-- Ingredients list will be populated here -->
@@ -288,7 +288,7 @@
             <div id="supplies-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Supplies (Utensils, Packaging)</h2>
-                    <button onclick="openModal('add-supply-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Supply</button>
+                    <button onclick="prepareModal('add-supply-modal'); openModal('add-supply-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Add Supply</button>
                 </div>
                 <div id="supplies-list" class="bg-white p-4 rounded-lg shadow">
                     <!-- Supplies list will be populated here -->
@@ -299,7 +299,7 @@
             <div id="recipes-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Recipes</h2>
-                    <button onclick="openModal('add-recipe-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Create Recipe</button>
+                    <button onclick="prepareModal('add-recipe-modal'); openModal('add-recipe-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>Create Recipe</button>
                 </div>
                 <div id="recipes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Recipes list will be populated here -->
@@ -310,7 +310,7 @@
             <div id="customers-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Customers</h2>
-                    <button onclick="openModal('add-customer-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-user-plus mr-2"></i>Add Customer</button>
+                    <button onclick="prepareModal('add-customer-modal'); openModal('add-customer-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-user-plus mr-2"></i>Add Customer</button>
                 </div>
                 <div id="customers-list" class="bg-white p-4 rounded-lg shadow">
                     <!-- Customers list will be populated here -->
@@ -321,7 +321,7 @@
             <div id="orders-tab" class="tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Manage Orders</h2>
-                    <button onclick="openModal('add-order-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>New Order</button>
+                    <button onclick="prepareModal('add-order-modal'); openModal('add-order-modal')" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"><i class="fas fa-plus mr-2"></i>New Order</button>
                 </div>
                 <div id="orders-list" class="space-y-4">
                     <!-- Orders list will be populated here -->
@@ -1310,7 +1310,7 @@
             rec.items.forEach(item => {
                 addRecipeItem(item.type, item.id, item.quantity);
             });
-            updateRecipePriceSuggestions(); // <-- Recalculate price suggestions on edit
+            updateRecipePriceSuggestions();
             openModal('add-recipe-modal');
         };
 
@@ -1477,12 +1477,12 @@
             const options = cache.map(item => `<option value="${item.id}" ${item.id === selectedId ? 'selected' : ''}>${item.name} ${item.providerId ? `(${providersCache.find(p=>p.id === item.providerId)?.name || ''})` : ''}</option>`).join('');
 
             div.innerHTML = `
-                <select class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" onchange="updateRecipePriceSuggestions()">
+                <select class="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" onchange="updateRecipePriceSuggestions(); updateRecipeItemUnit(this);">
                     <option value="">Select ${type}...</option>
                     ${options}
                 </select>
                 <input type="number" value="${quantity}" min="0" step="any" class="w-24 rounded-md border-gray-300 shadow-sm sm:text-sm" placeholder="Qty" oninput="updateRecipePriceSuggestions()">
-                <span class="text-sm text-gray-500">${type === 'ingredient' ? (cache.find(i=>i.id===selectedId)?.unit || '') : 'unit(s)'}</span>
+                <span class="recipe-item-unit text-sm text-gray-500 w-16 truncate">${type === 'ingredient' ? (cache.find(i=>i.id===selectedId)?.unit || 'unit') : 'unit(s)'}</span>
                 <button type="button" onclick="this.parentElement.remove(); updateRecipePriceSuggestions();" class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
             `;
             container.appendChild(div);
@@ -1505,6 +1505,20 @@
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
             `;
             container.appendChild(div);
+        }
+
+        window.updateRecipeItemUnit = function(selectElement) {
+            const selectedId = selectElement.value;
+            const row = selectElement.closest('.recipe-item-row');
+            const unitSpan = row.querySelector('.recipe-item-unit');
+            const type = row.dataset.type;
+
+            if (type === 'ingredient') {
+                const ingredient = ingredientsCache.find(i => i.id === selectedId);
+                unitSpan.textContent = ingredient ? ingredient.unit : 'unit';
+            } else {
+                unitSpan.textContent = 'unit(s)';
+            }
         }
 
         window.updateRecipePriceSuggestions = () => {
@@ -1563,19 +1577,27 @@
             document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
         };
 
-        window.openModal = (modalId) => {
-            if (modalId !== 'delete-confirm-modal') {
-                const form = document.getElementById(`${modalId.replace('-modal', '')}-form`);
-                if(form) form.reset();
-                if(modalId === 'add-expense-modal') document.getElementById('expense-date').valueAsDate = new Date();
-                if(modalId === 'add-recipe-modal') {
-                    document.getElementById('recipe-items-container').innerHTML = '';
-                    updateRecipePriceSuggestions();
-                }
-                if(modalId === 'add-order-modal') document.getElementById('order-items-container').innerHTML = '';
+        // *** FIXED: Separated reset logic from open logic ***
+        window.prepareModal = function(modalId) {
+            const form = document.getElementById(`${modalId.replace('-modal', '')}-form`);
+            if(form) {
+                form.reset();
                 const hiddenIdFields = form.querySelectorAll('input[type="hidden"]');
                 hiddenIdFields.forEach(field => field.value = '');
             }
+            if(modalId === 'add-recipe-modal') {
+                document.getElementById('recipe-items-container').innerHTML = '';
+                updateRecipePriceSuggestions();
+            }
+            if(modalId === 'add-order-modal') {
+                document.getElementById('order-items-container').innerHTML = '';
+            }
+            if(modalId === 'add-expense-modal') {
+                document.getElementById('expense-date').valueAsDate = new Date();
+            }
+        }
+
+        window.openModal = (modalId) => {
             document.getElementById(modalId).style.display = 'flex';
         };
 
@@ -1632,9 +1654,9 @@
 
                     for(const row of rows) {
                         const columns = row.split(',');
-                        // *** FIXED: Read from correct columns for Costos.csv ***
-                        const name = columns[1]?.trim();
-                        const cost = parseFloat(columns[2]);
+                        // *** FIXED: Read from correct columns A and B (index 0 and 1) ***
+                        const name = columns[0]?.trim();
+                        const cost = parseFloat(columns[1]);
                         
                         if (name && !isNaN(cost)) {
                             const existing = ingredientsCache.find(i => i.name.toLowerCase() === name.toLowerCase());
