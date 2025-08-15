@@ -437,9 +437,15 @@
             <h3 class="text-xl font-semibold mb-4">Add New Ingredient</h3>
             <form id="add-ingredient-form" class="space-y-4">
                 <input type="hidden" id="ingredient-id">
-                <div>
-                    <label for="ingredient-name" class="block text-sm font-medium text-gray-700">Ingredient Name</label>
-                    <input type="text" id="ingredient-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="ingredient-name" class="block text-sm font-medium text-gray-700">Ingredient Name</label>
+                        <input type="text" id="ingredient-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="ingredient-brand" class="block text-sm font-medium text-gray-700">Brand (Optional)</label>
+                        <input type="text" id="ingredient-brand" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
                 </div>
                  <div>
                     <label for="ingredient-provider" class="block text-sm font-medium text-gray-700">Provider</label>
@@ -447,30 +453,55 @@
                         <!-- Provider options populated here -->
                     </select>
                 </div>
+                <div class="p-4 bg-gray-50 rounded-lg border">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="ingredient-purchase-unit" class="block text-sm font-medium text-gray-700">Purchase Unit</label>
+                            <select id="ingredient-purchase-unit" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option>gram</option>
+                                <option>kg</option>
+                                <option>ml</option>
+                                <option>liter</option>
+                                <option>oz</option>
+                                <option>lb</option>
+                                <option>gallon</option>
+                                <option>piece</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label for="ingredient-recipe-unit" class="block text-sm font-medium text-gray-700">Recipe Unit</label>
+                            <select id="ingredient-recipe-unit" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option>gram</option>
+                                <option>kg</option>
+                                <option>ml</option>
+                                <option>liter</option>
+                                <option>oz</option>
+                                <option>lb</option>
+                                <option>gallon</option>
+                                <option>piece</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label for="ingredient-purchase-size" class="block text-sm font-medium text-gray-700">Purchase Size</label>
+                            <input type="number" id="ingredient-purchase-size" value="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="ingredient-purchase-cost" class="block text-sm font-medium text-gray-700">Purchase Cost (MXN)</label>
+                            <input type="number" id="ingredient-purchase-cost" placeholder="e.g., 10.50" step="0.01" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="ingredient-unit" class="block text-sm font-medium text-gray-700">Base Unit (for recipes)</label>
-                        <input type="text" id="ingredient-unit" placeholder="e.g., gram, ml, piece" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                     <div>
-                        <label for="ingredient-stock" class="block text-sm font-medium text-gray-700">Current Stock (in Base Unit)</label>
+                        <label for="ingredient-stock" class="block text-sm font-medium text-gray-700">Current Stock (in Recipe Unit)</label>
                         <input type="number" id="ingredient-stock" value="0" min="0" step="any" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="ingredient-purchase-size" class="block text-sm font-medium text-gray-700">Purchase Size</label>
-                        <input type="number" id="ingredient-purchase-size" placeholder="e.g., 1000 (for 1kg)" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <label for="ingredient-yield" class="block text-sm font-medium text-gray-700">Yield (%)</label>
+                        <input type="number" id="ingredient-yield" value="100" min="1" max="100" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
-                    <div>
-                        <label for="ingredient-purchase-cost" class="block text-sm font-medium text-gray-700">Purchase Cost (MXN)</label>
-                        <input type="number" id="ingredient-purchase-cost" placeholder="e.g., 10.50" step="0.01" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    </div>
-                </div>
-                <div>
-                    <label for="ingredient-yield" class="block text-sm font-medium text-gray-700">Yield (%)</label>
-                    <input type="number" id="ingredient-yield" value="100" min="1" max="100" placeholder="e.g., 80 for chicken with bones" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    <p class="text-xs text-gray-500 mt-1">Amount of usable product after prep. 100% if no waste.</p>
                 </div>
                 <div class="flex justify-end gap-4">
                     <button type="button" onclick="closeModal('add-ingredient-modal')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">Cancel</button>
