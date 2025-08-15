@@ -1254,6 +1254,7 @@
         // --- Edit and Delete Functions ---
         
         window.editProvider = (id) => {
+            prepareModal('add-provider-modal');
             const prov = providersCache.find(p => p.id === id);
             if (!prov) return;
             document.getElementById('provider-id').value = id;
@@ -1264,6 +1265,7 @@
         };
 
         window.editIngredient = (id) => {
+            prepareModal('add-ingredient-modal');
             const ing = ingredientsCache.find(i => i.id === id);
             if (!ing) return;
             document.getElementById('ingredient-id').value = id;
@@ -1278,6 +1280,7 @@
         };
         
         window.editSupply = (id) => {
+            prepareModal('add-supply-modal');
             const sup = suppliesCache.find(s => s.id === id);
             if (!sup) return;
             document.getElementById('supply-id').value = id;
@@ -1289,6 +1292,7 @@
         };
 
         window.editCustomer = (id) => {
+            prepareModal('add-customer-modal');
             const cust = customersCache.find(c => c.id === id);
             if (!cust) return;
             document.getElementById('customer-id').value = id;
@@ -1299,6 +1303,7 @@
         };
 
         window.editRecipe = (id) => {
+            prepareModal('add-recipe-modal');
             const rec = recipesCache.find(r => r.id === id);
             if (!rec) return;
             document.getElementById('recipe-id').value = id;
@@ -1315,6 +1320,7 @@
         };
 
         window.editOrder = (id) => {
+            prepareModal('add-order-modal');
             const order = ordersCache.find(o => o.id === id);
             if (!order) return;
             document.getElementById('order-id').value = id;
@@ -1331,6 +1337,7 @@
         };
 
         window.editExpense = (id) => {
+            prepareModal('add-expense-modal');
             const exp = expensesCache.find(e => e.id === id);
             if (!exp) return;
             document.getElementById('expense-id').value = id;
@@ -1577,7 +1584,6 @@
             document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
         };
 
-        // *** FIXED: Separated reset logic from open logic ***
         window.prepareModal = function(modalId) {
             const form = document.getElementById(`${modalId.replace('-modal', '')}-form`);
             if(form) {
